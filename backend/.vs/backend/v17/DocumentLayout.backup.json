@@ -1,0 +1,374 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\reactjs\\ProjectSem3\\backend\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|d:\\reactjs\\projectsem3\\backend\\backend\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|solutionrelative:backend\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|d:\\reactjs\\projectsem3\\backend\\backend\\controllers\\flowerscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|solutionrelative:backend\\controllers\\flowerscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|d:\\reactjs\\projectsem3\\backend\\backend\\models\\dto\\uploadimageflower.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|solutionrelative:backend\\models\\dto\\uploadimageflower.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|d:\\reactjs\\projectsem3\\backend\\backend\\models\\flower.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|solutionrelative:backend\\models\\flower.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|d:\\reactjs\\projectsem3\\backend\\backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|solutionrelative:backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|d:\\reactjs\\projectsem3\\backend\\backend\\controllers\\orderdetailscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|solutionrelative:backend\\controllers\\orderdetailscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|d:\\reactjs\\projectsem3\\backend\\backend\\models\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|solutionrelative:backend\\models\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|d:\\reactjs\\projectsem3\\backend\\backend\\models\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|solutionrelative:backend\\models\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|d:\\reactjs\\projectsem3\\backend\\backend\\models\\message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|solutionrelative:backend\\models\\message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|d:\\reactjs\\projectsem3\\backend\\backend\\models\\deliveryinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|solutionrelative:backend\\models\\deliveryinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|d:\\reactjs\\projectsem3\\backend\\backend\\controllers\\orderscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|solutionrelative:backend\\controllers\\orderscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|d:\\reactjs\\projectsem3\\backend\\backend\\controllers\\cartscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|solutionrelative:backend\\controllers\\cartscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|d:\\reactjs\\projectsem3\\backend\\backend\\models\\cart.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|solutionrelative:backend\\models\\cart.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|d:\\reactjs\\projectsem3\\backend\\backend\\controllers\\deliveryinfoescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|solutionrelative:backend\\controllers\\deliveryinfoescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|d:\\reactjs\\projectsem3\\backend\\backend\\controllers\\paymentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|solutionrelative:backend\\controllers\\paymentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|d:\\reactjs\\projectsem3\\backend\\backend\\models\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|solutionrelative:backend\\models\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|d:\\reactjs\\projectsem3\\backend\\backend\\controllers\\customerscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|solutionrelative:backend\\controllers\\customerscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|d:\\reactjs\\projectsem3\\backend\\backend\\controllers\\messagescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|solutionrelative:backend\\controllers\\messagescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|d:\\reactjs\\projectsem3\\backend\\backend\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|solutionrelative:backend\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|d:\\reactjs\\projectsem3\\backend\\backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|solutionrelative:backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|d:\\reactjs\\projectsem3\\backend\\backend\\models\\dto\\registerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|solutionrelative:backend\\models\\dto\\registerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|d:\\reactjs\\projectsem3\\backend\\backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{96A38BB6-B685-4334-AA0C-04426BF42EAF}|backend\\backend.csproj|solutionrelative:backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": ".gitignore",
+              "DocumentMoniker": "D:\\reactjs\\ProjectSem3\\backend\\backend\\.gitignore",
+              "RelativeDocumentMoniker": "backend\\.gitignore",
+              "ToolTip": "D:\\reactjs\\ProjectSem3\\backend\\backend\\.gitignore",
+              "RelativeToolTip": "backend\\.gitignore",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-02-12T10:01:01.644Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "UploadImageFlower.cs",
+              "DocumentMoniker": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Models\\DTO\\UploadImageFlower.cs",
+              "RelativeDocumentMoniker": "backend\\Models\\DTO\\UploadImageFlower.cs",
+              "ToolTip": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Models\\DTO\\UploadImageFlower.cs",
+              "RelativeToolTip": "backend\\Models\\DTO\\UploadImageFlower.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAowCgAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-11T14:03:59.588Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "backend\\Controllers\\AuthController.cs",
+              "ToolTip": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "backend\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAIEAAAAAAAAAAAAIwJMAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-28T14:00:31.357Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "OrdersController.cs",
+              "DocumentMoniker": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Controllers\\OrdersController.cs",
+              "RelativeDocumentMoniker": "backend\\Controllers\\OrdersController.cs",
+              "ToolTip": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Controllers\\OrdersController.cs",
+              "RelativeToolTip": "backend\\Controllers\\OrdersController.cs",
+              "ViewState": "AgIAABoAAAAAAAAAAAAUwEUAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-05T07:32:33.123Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Flower.cs",
+              "DocumentMoniker": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Models\\Flower.cs",
+              "RelativeDocumentMoniker": "backend\\Models\\Flower.cs",
+              "ToolTip": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Models\\Flower.cs",
+              "RelativeToolTip": "backend\\Models\\Flower.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAmwBUAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-07T04:30:00.791Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "DeliveryInfoesController.cs",
+              "DocumentMoniker": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Controllers\\DeliveryInfoesController.cs",
+              "RelativeDocumentMoniker": "backend\\Controllers\\DeliveryInfoesController.cs",
+              "ToolTip": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Controllers\\DeliveryInfoesController.cs",
+              "RelativeToolTip": "backend\\Controllers\\DeliveryInfoesController.cs",
+              "ViewState": "AgIAAEEAAAAAAAAAAADwv00AAABTAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-05T07:29:00.795Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FlowersController.cs",
+              "DocumentMoniker": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Controllers\\FlowersController.cs",
+              "RelativeDocumentMoniker": "backend\\Controllers\\FlowersController.cs",
+              "ToolTip": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Controllers\\FlowersController.cs",
+              "RelativeToolTip": "backend\\Controllers\\FlowersController.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAA3wBkAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-30T05:40:43.778Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Order.cs",
+              "DocumentMoniker": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Models\\Order.cs",
+              "RelativeDocumentMoniker": "backend\\Models\\Order.cs",
+              "ToolTip": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Models\\Order.cs",
+              "RelativeToolTip": "backend\\Models\\Order.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAA4wCMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-31T06:50:51.013Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "MessagesController.cs",
+              "DocumentMoniker": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Controllers\\MessagesController.cs",
+              "RelativeDocumentMoniker": "backend\\Controllers\\MessagesController.cs",
+              "ToolTip": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Controllers\\MessagesController.cs",
+              "RelativeToolTip": "backend\\Controllers\\MessagesController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-05T06:51:20.381Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "OrderDetailsController.cs",
+              "DocumentMoniker": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Controllers\\OrderDetailsController.cs",
+              "RelativeDocumentMoniker": "backend\\Controllers\\OrderDetailsController.cs",
+              "ToolTip": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Controllers\\OrderDetailsController.cs",
+              "RelativeToolTip": "backend\\Controllers\\OrderDetailsController.cs",
+              "ViewState": "AgIAADwAAAAAAAAAAAAiwEkAAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-07T03:05:26.062Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Message.cs",
+              "DocumentMoniker": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Models\\Message.cs",
+              "RelativeDocumentMoniker": "backend\\Models\\Message.cs",
+              "ToolTip": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Models\\Message.cs",
+              "RelativeToolTip": "backend\\Models\\Message.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-10T08:11:38.122Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Payment.cs",
+              "DocumentMoniker": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Models\\Payment.cs",
+              "RelativeDocumentMoniker": "backend\\Models\\Payment.cs",
+              "ToolTip": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Models\\Payment.cs",
+              "RelativeToolTip": "backend\\Models\\Payment.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-10T08:51:48.101Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "DeliveryInfo.cs",
+              "DocumentMoniker": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Models\\DeliveryInfo.cs",
+              "RelativeDocumentMoniker": "backend\\Models\\DeliveryInfo.cs",
+              "ToolTip": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Models\\DeliveryInfo.cs",
+              "RelativeToolTip": "backend\\Models\\DeliveryInfo.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-06T03:52:44.563Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "CartsController.cs",
+              "DocumentMoniker": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Controllers\\CartsController.cs",
+              "RelativeDocumentMoniker": "backend\\Controllers\\CartsController.cs",
+              "ToolTip": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Controllers\\CartsController.cs",
+              "RelativeToolTip": "backend\\Controllers\\CartsController.cs",
+              "ViewState": "AgIAAJMAAAAAAAAAAAAAAKIAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-05T09:38:43.521Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Cart.cs",
+              "DocumentMoniker": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Models\\Cart.cs",
+              "RelativeDocumentMoniker": "backend\\Models\\Cart.cs",
+              "ToolTip": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Models\\Cart.cs",
+              "RelativeToolTip": "backend\\Models\\Cart.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-30T10:40:07.66Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "PaymentsController.cs",
+              "DocumentMoniker": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Controllers\\PaymentsController.cs",
+              "RelativeDocumentMoniker": "backend\\Controllers\\PaymentsController.cs",
+              "ToolTip": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Controllers\\PaymentsController.cs",
+              "RelativeToolTip": "backend\\Controllers\\PaymentsController.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAABgAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-05T08:48:00.584Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Program.cs",
+              "RelativeDocumentMoniker": "backend\\Program.cs",
+              "ToolTip": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Program.cs",
+              "RelativeToolTip": "backend\\Program.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAAADIAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-31T14:01:01.114Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "CustomersController.cs",
+              "DocumentMoniker": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Controllers\\CustomersController.cs",
+              "RelativeDocumentMoniker": "backend\\Controllers\\CustomersController.cs",
+              "ToolTip": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Controllers\\CustomersController.cs",
+              "RelativeToolTip": "backend\\Controllers\\CustomersController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAABNAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-02T03:00:34.591Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "Customer.cs",
+              "DocumentMoniker": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Models\\Customer.cs",
+              "RelativeDocumentMoniker": "backend\\Models\\Customer.cs",
+              "ToolTip": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Models\\Customer.cs",
+              "RelativeToolTip": "backend\\Models\\Customer.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAA0wBIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-02T02:50:22.736Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "UsersController.cs",
+              "DocumentMoniker": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Controllers\\UsersController.cs",
+              "RelativeDocumentMoniker": "backend\\Controllers\\UsersController.cs",
+              "ToolTip": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Controllers\\UsersController.cs",
+              "RelativeToolTip": "backend\\Controllers\\UsersController.cs",
+              "ViewState": "AgIAAEcAAAAAAAAAAAAIwFcAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-28T14:08:10.358Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "RegisterDTO.cs",
+              "DocumentMoniker": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Models\\DTO\\RegisterDTO.cs",
+              "RelativeDocumentMoniker": "backend\\Models\\DTO\\RegisterDTO.cs",
+              "ToolTip": "D:\\reactjs\\ProjectSem3\\backend\\backend\\Models\\DTO\\RegisterDTO.cs",
+              "RelativeToolTip": "backend\\Models\\DTO\\RegisterDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-02T02:44:29.006Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\reactjs\\ProjectSem3\\backend\\backend\\appsettings.json",
+              "RelativeDocumentMoniker": "backend\\appsettings.json",
+              "ToolTip": "D:\\reactjs\\ProjectSem3\\backend\\backend\\appsettings.json",
+              "RelativeToolTip": "backend\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-01-28T19:09:39.93Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
