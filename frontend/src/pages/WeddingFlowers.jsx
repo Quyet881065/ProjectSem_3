@@ -44,7 +44,7 @@ const WeddingFlowers = () => {
   }, [flowers, sortType, search, showSearch])
 
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col border-t my-5'>
       <div className='flex justify-between text-center text-2xl font-medium my-10'>
         <Title text1={'WEDDING'} text2={"FLOWERS"} />
         <select onChange={e => setSortType(e.target.value)} className='border-2 border-gray-500 text-sm px-2'>

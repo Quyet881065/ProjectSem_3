@@ -19,7 +19,7 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
         {
-            var customers =  _flowerContext.Customers.ToListAsync();
+            var customers = await _flowerContext.Customers.ToListAsync();
             return Ok(customers);
         }
         // Get customer by ID

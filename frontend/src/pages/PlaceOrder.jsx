@@ -102,7 +102,7 @@ const PlaceOrder = () => {
 
             await clearCart();
             alert('Order placed successfully!');
-            navigate(`/orders/${orderId}`)
+            navigate(`//${orderId}`)
         } catch (error) {
             console.error('Error placing order', error);
             alert('Failed to place order');

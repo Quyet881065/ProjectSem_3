@@ -8,7 +8,7 @@ const ResetPassword = () => {
   const {backendurl} = useContext(ShopContext);
   const [email, setEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
@@ -16,12 +16,12 @@ const ResetPassword = () => {
     e.preventDefault();
     setMessage('')
     setEmail('')
-    if (newPassword !== confirmNewPassword) {
+    if (newPassword !== confirmPassword) {
       setError('Mật khẩu xác nhận không khớp.');
       return;
     }
     try {
-      const response = await axios.post(backendurl + '/api/Auth/forgot-password', {email, newPassword, confirmNewPassword})
+      const response = await axios.post(backendurl + '/api/Auth/forgot-password', {email, newPassword, confirmPassword})
       if (response.data.success) {
         setMessage('Cập nhật mật khẩu thành công.');
       } else {
@@ -58,8 +58,8 @@ const ResetPassword = () => {
           <label className='w-32'>Confirm Password:</label>
           <input className='border border-gray-800 w-full py-1'
             type="password"
-            value={confirmNewPassword}
-            onChange={(e) => setConfirmNewPassword(e.target.value)}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
         </div>

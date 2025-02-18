@@ -21,12 +21,14 @@ namespace backend.Controllers
         }
 
         // GET: api/OrderDetails
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<object>>> GetOrderDetails()
+        [HttpGet("customer/{customerId}")]
+        public async Task<ActionResult<IEnumerable<object>>> GetOrderDetails(int customerId)
         {
             var orderDetails = await _context.OrderDetails
+                 .Where(od => od.Order.CustomerId == customerId)  
                 .Include(od => od.Flower)
                 .Include(od => od.Order)
+                .ThenInclude(o => o.DeliveryInfos)
                 .Select(od => new
                 {
                     Orderdetailid = od.Orderdetailid,
@@ -40,7 +42,9 @@ namespace backend.Controllers
                     FlowerImage = od.Flower.Image,
                     DeliveryAddress = od.Order.DeliveryAddress,
                     Total = od.Order.Total,
-                    Status = od.Order.Status
+                    Status = od.Order.Status,
+                    // Lấy số điện thoại của người nhận từ DeliveryInfos (lấy thông tin đầu tiên nếu có)
+                    RecipientPhone = od.Order.DeliveryInfos.FirstOrDefault().RecipientPhoneNo
                 })
                 .ToListAsync();
 
@@ -48,11 +52,11 @@ namespace backend.Controllers
         }
 
         // GET: api/OrderDetails/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<OrderDetail>> GetOrderDetail(int id)
+        [HttpGet("{orderDetailId}")]
+        public async Task<ActionResult<OrderDetail>> GetOrderDetail(int orderDetailId)
         {
             var orderDetail = await _context.OrderDetails
-                .Where(od => od.Orderdetailid == id)
+                .Where(od => od.Orderdetailid == orderDetailId)
                 //.Where(od => od.Orderdetailid == id): Lọc những OrderDetails có Orderdetailid khớp với id được truyền vào
                 .Include(od => od.Order)
                 //  Gồm thông tin liên quan từ bảng Order. Thao tác này thực hiện "eager loading" (tải trước dữ liệu liên quan),

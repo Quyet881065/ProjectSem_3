@@ -39,7 +39,7 @@ namespace backend.Controllers
             _smtpPassword = _configuration["Email:SmtpPassword"];
         }
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromForm] RegisterDTO registerDTO)
+        public async Task<IActionResult> Register(RegisterDTO registerDTO)
         {
             // Kiem tra email da ton tai chua
             var existingUser = await _webflowerContext.Users.FirstOrDefaultAsync(user => user.Email == registerDTO.Email);
@@ -53,7 +53,7 @@ namespace backend.Controllers
             // Tao nguoi dung moi
             var newUser = new User
             {
-                Username = registerDTO.UserName,
+                Username = registerDTO.FullName,
                 Email = registerDTO.Email,
                 Password = hashedPassword,
             };
@@ -151,25 +151,31 @@ namespace backend.Controllers
             });
         }
 
-        [HttpPost("forgot-password")]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO forgotPasswordDTO)
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordDTO changePasswordDTO)
         {
             // Kiểm tra xem mật khẩu mới và mật khẩu xác nhận có trùng khớp không
-            if (forgotPasswordDTO.NewPassword != forgotPasswordDTO.ConfirmNewPassword)
+            if (changePasswordDTO.NewPassword != changePasswordDTO.ConfirmNewPassword)
             {
                 return BadRequest(new { success = false, message = "Mật khẩu xác nhận không trùng khớp với mật khẩu mới." });
             }
 
-            // Giả sử rằng bạn có một phương thức để lấy người dùng hiện tại hoặc dựa trên email/số điện thoại
-            var user = await _webflowerContext.Users.FirstOrDefaultAsync(u => u.Email == forgotPasswordDTO.Email); // Ví dụ lấy người dùng qua email
+            // Lấy người dùng hiện tại dựa trên Email
+            var user = await _webflowerContext.Users.FirstOrDefaultAsync(u => u.UserId == changePasswordDTO.UserId);
 
             if (user == null)
             {
                 return BadRequest(new { success = false, message = "Người dùng không tồn tại." });
             }
 
+            // Kiểm tra xem mật khẩu cũ có khớp không
+            if(!BCrypt.Net.BCrypt.Verify(changePasswordDTO.OldPassword, user.Password))
+            {
+                return BadRequest(new { success = false, message = "Mật khẩu cũ không chính xác." });
+            }
+
             //Hash mat khau moi
-            user.Password = BCrypt.Net.BCrypt.HashPassword(forgotPasswordDTO.NewPassword);
+            user.Password = BCrypt.Net.BCrypt.HashPassword(changePasswordDTO.NewPassword);
 
             try
             {
@@ -182,17 +188,51 @@ namespace backend.Controllers
                 return StatusCode(500, new { success = false, message = "Đã xảy ra lỗi trong quá trình cập nhật mật khẩu" });
             }
 
-            // Gửi email xác nhận (tuỳ chọn)
-            // await _emailService.SendPasswordResetConfirmationEmail(user.Email);
-
+           
             return Ok(new {success = true, message = "Cập nhật mật khẩu thành công." });
+        }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult>  ForgotPassword (ForgotPassword forgotPassword)
+        {
+            if(forgotPassword.NewPassword != forgotPassword.ConfirmPassword)
+            {
+                return BadRequest(new { success = false, message = "Mật khẩu xác nhận không trùng khớp với mật khẩu mới." });
+            }
+            // Lấy người dùng hiện tại dựa trên Email
+            var user = await _webflowerContext.Users.FirstOrDefaultAsync(u => u.Email == forgotPassword.Email);
+            if (user == null)
+            {
+                return BadRequest(new { success = false, message = "Người dùng không tồn tại." });
+            }
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(forgotPassword.NewPassword);
+
+            try
+            {
+                // Luu mat khau moi vao csdl
+                _webflowerContext.Update(user);
+                await _webflowerContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Lỗi khi cập nhật mật khẩu cho người dùng {Email}", user.Email);
+                return StatusCode(500, new { success = false, message = "Đã xảy ra lỗi trong quá trình cập nhật mật khẩu" });
+            }
+
+            return Ok(new
+            {
+                success = true,
+                message = "Doi mat khau thanh cong"
+            });
+
         }
 
 
         [HttpPost("request-change-password")]
-        public async Task<IActionResult> RequestChangePassword (ForgotPasswordDTO forgotPasswordDTO)
+        public async Task<IActionResult> RequestChangePassword (ForgotPassword resetPassword)
         {
-            var user = await _webflowerContext.Users.SingleOrDefaultAsync(u => u.Email == forgotPasswordDTO.Email);
+            var user = await _webflowerContext.Users.SingleOrDefaultAsync(u => u.Email == resetPassword.Email);
             if (user == null)
             {
                 return BadRequest(new { success = false, message = "Email khong ton tai" }); 

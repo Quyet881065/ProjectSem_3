@@ -30,7 +30,7 @@ namespace backend.Controllers
         // GET: api/Carts/5
         // Get all cart items for a user
         [HttpGet("{userId}")]
-        public async Task<ActionResult<IEnumerable<Cart>>> GetCartItems(int userId)
+        public async Task<ActionResult<IEnumerable<object>>> GetCartItems(int userId)
         {
             // Lấy URL cơ sở (base URL) của request
             //var baseUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
@@ -52,9 +52,9 @@ namespace backend.Controllers
         })
         .ToListAsync();
 
-            if (cartItems == null)
+            if (cartItems == null || !cartItems.Any())
             {
-                return NotFound();
+                return NotFound(new { success = false, message = "Cart is empty or user not found." });
             }
 
             return Ok(new { success = true, cartData = cartItems });
@@ -132,7 +132,7 @@ namespace backend.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return Ok(cartItem);
+            return Ok(new{success= true,  cartItem = cartItem});
         }
 
         // DELETE: api/Carts/5
