@@ -4,6 +4,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext';
 import Title from '../components/Title';
 import FlowerItem from '../components/FlowerItem';
+import OurPolicy from '../components/OurPolicy';
 
 const BirthdayFlowers = () => {
   const [birthdayFlower, setBirthdayFlower] = useState([]);
@@ -52,6 +53,9 @@ const BirthdayFlowers = () => {
           <FlowerItem key={index} id={item.flowerId} name={item.flowerName} price={item.price} image={item.image}/>
         ))}
       </div>
+      <div className='py-10'>
+        <OurPolicy/>
+        </div>
     </div>
   )
 }

@@ -9,6 +9,8 @@ import Orders from './pages/Orders';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import ViewOrderDetail from './pages/ViewOrderDetail';
+import Dashboard from './pages/Dashboard';
+import User from './pages/User';
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 export const currency = '$'
@@ -30,12 +32,14 @@ function App() {
            <hr/>
            <div className='flex w-full'>
              <Sidebar/>
-             <div className='w-[80%] my-8 ml-[max(3vw,25px)] text-base text-gray-600'>
+             <div className='w-[85%] my-8 ml-[max(1vw,25px)] text-base text-gray-600'>
               <Routes>
+                <Route path='/' element={<Dashboard/>}/>
                 <Route path='/add' element={<Add/>}/>
                 <Route path='/list' element={<Lists/>}/>
                 <Route path='/orders' element={<Orders/>}/>
                 <Route path='/orders/:orderId' element={<ViewOrderDetail/>}/>
+                <Route path='/users' element={<User/>}/>
               </Routes>
              </div>
            </div>

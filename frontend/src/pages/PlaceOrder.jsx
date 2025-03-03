@@ -15,9 +15,10 @@ const PlaceOrder = () => {
     const [paymentMethod, setPaymentMethod] = useState('');
     const [occasionId, setOccasionId] = useState('');
     const [occasions, setOccasions] = useState([]);
-    const { backendurl, getCartAmount, navigate, clearCart, cartItems } = useContext(ShopContext);
+    const { backendurl, getCartAmount, navigate, clearCart, cartData } = useContext(ShopContext);
     const customerId = localStorage.getItem('customerId');
-    console.log(cartItems)
+
+    console.log(cartData)
     // Get message
     useEffect(() => {
         const fetchOccasions = async () => {
@@ -33,8 +34,8 @@ const PlaceOrder = () => {
     console.log(getCartAmount())
 
     // Ham submit order details
-    const submitHandleOrderDetails = async (orderId) => {
-        const orderDetails = cartItems.map(item => ({
+    const handleSubmitOrderDetails = async (orderId) => {
+        const orderDetails = cartData.map(item => ({
             orderId: orderId,
             flowerId: item.flower.flowerId,
             quantity: item.quantity,
@@ -52,11 +53,33 @@ const PlaceOrder = () => {
         }
     }
 
+    const handleStripePayment = async (orderId) => {
+        try {
+
+            // Create the payment session on the backend
+            const response = await axios.post(backendurl + '/api/Payment/create-checkout-session', {
+                orderId: orderId,
+                amount: getCartAmount(), // Assuming amount is in USD
+            });
+
+            // Redirect the user to the Stripe checkout page
+
+            const { url } = response.data;
+            if (url) {
+                window.location.href = url;
+            }
+            console.log(url)
+            await clearCart();
+        } catch (error) {
+            console.error('Error with Stripe payment:', error);
+        }
+    };
+
     // Submit form
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!fullName || !address || !phone || !deliveryDate || !paymentMethod) {
+        if (!fullName || !address || !phone  || !paymentMethod) {
             alert('Please fill in all required fields.');
             return;
         }
@@ -77,7 +100,7 @@ const PlaceOrder = () => {
 
             localStorage.setItem('orderId', orderId);
 
-            submitHandleOrderDetails(orderId);
+            await handleSubmitOrderDetails(orderId);
 
             // Create delivery info payload
             const deliveryPayload = {
@@ -85,24 +108,25 @@ const PlaceOrder = () => {
                 recipientName: fullName,
                 recipientAddress: address,
                 recipientPhoneNo: phone,
-                deliveryDate: deliveryDate
+                //deliveryDate: deliveryDate
             };
 
             await axios.post(backendurl + '/api/DeliveryInfoes', deliveryPayload);
 
             // Create payment payload
-            const paymentPayload = {
-                orderid: orderId,
-                paymentMethod: paymentMethod,
-                paymentAmount: getCartAmount(),
-                paymentStatus: 'Pending'
-            };
-
-            await axios.post(backendurl + '/api/Payments', paymentPayload);
-
-            await clearCart();
-            alert('Order placed successfully!');
-            navigate(`//${orderId}`)
+            if (paymentMethod === 'card') {
+                await handleStripePayment(orderId);
+            } else {
+                const paymentPayload = {
+                    orderid: orderId,
+                    paymentMethod: paymentMethod,
+                    paymentAmount: getCartAmount(),
+                    paymentStatus: 'Cash On Delivery',
+                };
+                await axios.post(backendurl + '/api/Payments', paymentPayload);
+                navigate(`/orders/${orderId}`);
+                clearCart();
+            }
         } catch (error) {
             console.error('Error placing order', error);
             alert('Failed to place order');
@@ -110,7 +134,7 @@ const PlaceOrder = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className='flex flex-col sm:flex-row justify-between pt-5 sm:pt-10 border-t'>
+        <form onSubmit={handleSubmit} className='flex flex-col sm:flex-row justify-between pt-5 sm:py-10 border-t'>
             {/* Left Side */}
             <div className='flex flex-col w-full sm:max-w-[480px] gap-5'>
                 <div className='text-2xl text-center my-3'>
@@ -140,12 +164,6 @@ const PlaceOrder = () => {
                         onChange={(e) => setPhone(e.target.value)} className='border border-gray-200 rounded py-1.5' type='text' />
                 </div>
                 <div className='flex flex-col gap-1'>
-                    <label>Delivery Date</label>
-                    <input value={deliveryDate}
-                        onChange={(e) => setDeliveryDate(e.target.value)}
-                        className='border border-gray-200 rounded py-1.5' type='date' />
-                </div>
-                <div className='flex flex-col gap-1'>
                     <label>Select Occasion</label>
                     <select className='border border-gray-200 rounded py-1.5' value={occasionId} onChange={e => setOccasionId(e.target.value)}>
                         <option>Select Occasion</option>
@@ -166,19 +184,18 @@ const PlaceOrder = () => {
                     <div className={`flex items-center gap-3 border p-2 px-4 cursor-pointer ${paymentMethod === 'card' ? 'border-black' : ''}`}
                         onClick={() => setPaymentMethod('card')}>
                         <p className={`min-w-[14px] h-[14px] border rounded-full ${paymentMethod === 'card' ? 'bg-black' : ''}`}></p>
-                        <img className='h-5 mx-1 pr-2' alt='' />
-                        <p className='text-gray-500 text-sm font-medium mx-4'>Card Payment</p>
+                        <p className='text-gray-500 text-sm font-medium mx-4'>Card Payment Stripe</p>
                     </div>
                     <div
-                        className={`flex items-center gap-3 border p-2 px-4 cursor-pointer ${paymentMethod === 'cod' ? 'border-black' : ''}`}
-                        onClick={() => setPaymentMethod('cod')}
+                        className={`flex items-center gap-3 border p-2 px-4 cursor-pointer ${paymentMethod === 'Payment Cash' ? 'border-black' : ''}`}
+                        onClick={() => setPaymentMethod('Payment Cash')}
                     >
-                        <p className={`min-w-[14px] h-[14px] border rounded-full ${paymentMethod === 'cod' ? 'bg-black' : ''}`}></p>
+                        <p className={`min-w-[14px] h-[14px] border rounded-full ${paymentMethod === 'Payment Cash' ? 'bg-black' : ''}`}></p>
                         <p className='text-gray-500 text-sm font-medium mx-4'>Cash on Delivery</p>
                     </div>
                 </div>
                 <div className='w-full text-end mt-8'>
-                    <button onClick={() => navigate('/orders')} type='submit' className='bg-black text-gray-50 px-10 py-3 text-sm'>PLACE ORDER</button>
+                    <button type='submit' className='bg-blue-500 rounded-md text-gray-50 px-10 py-3 text-sm'>PLACE ORDER</button>
                 </div>
             </div>
         </form >

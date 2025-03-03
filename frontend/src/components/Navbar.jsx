@@ -5,7 +5,7 @@ import { ShopContext } from '../context/ShopContext.jsx'
 
 const Navbar = () => {
     const [visible, setVisible] = useState(false);
-    const { setShowSearch, navigate, token, setCartData, setToken , cartCount} = useContext(ShopContext);
+    const { setShowSearch, navigate, token, setCartData, setToken, cartCount } = useContext(ShopContext);
     const logout = () => {
         navigate('/login');
         localStorage.removeItem('token');
@@ -44,14 +44,17 @@ const Navbar = () => {
                 <img onClick={() => setShowSearch(true)} className='w-5 cursor-pointer' src={assets.search_icon} alt='' />
                 {/* Sử dụng onClick={() => setShowSearch(true)} để đảm bảo hàm chỉ được gọi khi sự kiện onClick xảy ra. */}
                 <div className='group relative'>
-                    <img className='w-5 cursor-pointer min-w-5' onClick={() => navigate('/login')} src={assets.profile_icon} alt='' />
+                    <img className='w-5 cursor-pointer min-w-5' onClick={() => {
+                        if (!token) {
+                            navigate('/login');
+                        }
+                    }} src={assets.profile_icon} alt='' />
                     {token &&
                         <div className='group-hover:block hidden absolute dropdown-menu right-0 pt-4 w-40'>
                             <div className='flex flex-col gap-2 bg-slate-200 px-5 py-3 text-gray-500 rounded w-full'>
-                                <p className='cursor-pointer hover:text-black text-center'>My Profile</p>
                                 <p onClick={() => navigate('/orders')}
                                     className='cursor-pointer hover:text-black text-center'>Orders</p>
-                                <p onClick={()=> navigate('/changepassword')} className='cursor-pointer hover:text-black text-center whitespace-nowrap'>Change Password</p>
+                                <p onClick={() => navigate('/changepassword')} className='cursor-pointer hover:text-black text-center whitespace-nowrap'>Change Password</p>
                                 <p onClick={logout} className='cursor-pointer hover:text-black text-center'>Logout</p>
                             </div>
                         </div>

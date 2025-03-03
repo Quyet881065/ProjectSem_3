@@ -25,7 +25,30 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            var users = await _context.Users
+                .Include(u => u.Customers)
+                .ToListAsync();
+            users.ForEach(u =>
+            {
+                u.Customers = u.Customers.Select(c => new Customer
+                {
+                    CustomerId = c.CustomerId,
+                    FullName = c.FullName,
+                    Phone = c.Phone
+                }).ToList();
+            });
+            return Ok(users);
+        }
+
+        [HttpGet("TotalUser")]
+        public async Task<ActionResult<int>> GetTotalUse()
+        {
+            var totalUser = await _context.Users.CountAsync();
+            return Ok(new
+            {
+                success = true,
+                total = totalUser
+            });
         }
 
         // GET: api/Users/5
@@ -105,8 +128,9 @@ namespace backend.Controllers
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(new { success = true });
         }
+
 
         private bool UserExists(int id)
         {

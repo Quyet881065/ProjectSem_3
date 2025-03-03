@@ -84,9 +84,7 @@ public partial class WebflowerContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("fullName");
             entity.Property(e => e.Gender)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength()
+                .HasMaxLength(10)
                 .HasColumnName("gender");
             entity.Property(e => e.Phone)
                 .HasMaxLength(255)
@@ -109,7 +107,6 @@ public partial class WebflowerContext : DbContext
             entity.Property(e => e.Orderid).HasColumnName("orderid");
             entity.Property(e => e.RecipientAddress)
                 .HasMaxLength(255)
-                .IsUnicode(false)
                 .HasColumnName("recipient_address");
             entity.Property(e => e.RecipientName)
                 .HasMaxLength(100)
@@ -150,6 +147,7 @@ public partial class WebflowerContext : DbContext
             entity.Property(e => e.Price)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("price");
+            entity.Property(e => e.ProductsInclude).HasMaxLength(255);
         });
 
         modelBuilder.Entity<Message>(entity =>
@@ -160,7 +158,6 @@ public partial class WebflowerContext : DbContext
 
             entity.Property(e => e.Message1)
                 .HasMaxLength(255)
-                .IsUnicode(false)
                 .HasColumnName("message");
             entity.Property(e => e.OccasionName)
                 .HasMaxLength(100)
@@ -240,17 +237,25 @@ public partial class WebflowerContext : DbContext
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("payment_amount");
             entity.Property(e => e.PaymentDate)
-                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
                 .HasColumnName("payment_date");
             entity.Property(e => e.PaymentMethod)
                 .HasMaxLength(50)
-                .IsUnicode(false)
                 .HasColumnName("payment_method");
             entity.Property(e => e.PaymentStatus)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasDefaultValue("Pending")
                 .HasColumnName("payment_status");
+            entity.Property(e => e.VnpayMessage)
+                .HasMaxLength(255)
+                .HasColumnName("vnpay_message");
+            entity.Property(e => e.VnpayResponseCode)
+                .HasMaxLength(10)
+                .HasColumnName("vnpay_response_code");
+            entity.Property(e => e.VnpayTransactionId)
+                .HasMaxLength(255)
+                .HasColumnName("vnpay_transaction_id");
 
             entity.HasOne(d => d.Order).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.Orderid)

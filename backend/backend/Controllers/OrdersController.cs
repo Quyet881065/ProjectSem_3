@@ -28,6 +28,7 @@ namespace backend.Controllers
             var orders =  await _context.Orders
                 .Include(o => o.DeliveryInfos)
                 .Include(o => o.Payments)
+                .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();
 
             var ordersWithDetails = orders.Select(order => new
@@ -45,14 +46,32 @@ namespace backend.Controllers
                 PaymentInfo = new
                 {
                     PaymentMethod = order.Payments.FirstOrDefault()?.PaymentMethod,
+                    PaymentDate = order.Payments.FirstOrDefault()?.PaymentDate
                 }
             }).ToList();
+            var totalOrders = orders.Count;
             return Ok(new
             {
                 success = true,
-                data = ordersWithDetails
+                data = ordersWithDetails,
+                totalOrders = totalOrders, // Trả về tổng số lượng đơn hàng
             });
         }
+
+        [HttpGet("TotalOrders")]
+        public async Task<ActionResult<int>> GetTotalOrders()
+        {
+            // Đếm số lượng đơn hàng
+            var totalOrders = await _context.Orders.CountAsync();
+
+            // Trả về tổng số lượng đơn hàng
+            return Ok(new
+            {
+                success = true,
+                totalOrders = totalOrders
+            });
+        }
+
 
         // GET: api/Orders/5
         [HttpGet("{id}")]
@@ -61,6 +80,9 @@ namespace backend.Controllers
             var order = await _context.Orders
                 .Include(o => o.DeliveryInfos)  // Load dữ liệu từ bảng DeliveryInfo
                 .Include(o => o.Payments)  // Load dữ liệu từ bảng Payment
+                .Include(o => o.OrderDetails)     // Load dữ liệu từ bảng OrderDetail
+                  .ThenInclude(od => od.Flower) // Load dữ liệu từ bảng Flower liên quan đến OrderDetail
+                .Include(o => o.Occasion) // Load dữ liệu từ bảng Message (Occasion)
                 .FirstOrDefaultAsync(o => o.OrderId == id);  // Tìm order theo ID
 
 
@@ -73,8 +95,17 @@ namespace backend.Controllers
             var deliveryInfo = order.DeliveryInfos?.FirstOrDefault();
             var paymentInfo = order.Payments?.FirstOrDefault();
 
-            // Tạo object trả về bao gồm cả thông tin từ các bảng liên quan
+            // Tạo danh sách hoa từ OrderDetails
+            var flowerDetails = order.OrderDetails.Select(od => new
+            {
+                od.FlowerId,
+                FlowerName = od.Flower.FlowerName,
+                od.Quantity,
+                od.Price,
+                Image = od.Flower.Image
+            }).ToList();
 
+            // Tạo object trả về bao gồm cả thông tin từ các bảng liên quan
             var orderWithDetails = new
             {
                 OrderId = order.OrderId,
@@ -85,10 +116,17 @@ namespace backend.Controllers
                 DeliveryInfo = new
                 {
                     RecipientPhoneNo = deliveryInfo?.RecipientPhoneNo,
+                    RecipientName = deliveryInfo?.RecipientName,
                 },
                 PaymentInfo = new
                 {
                     PaymentMethod = paymentInfo?.PaymentMethod,
+                },
+                Flowers = flowerDetails,
+                Occasion = new
+                {
+                    OccasionName = order.Occasion?.OccasionName,
+                    Message = order.Occasion?.Message1 // Lấy Message1 từ bảng Message (Occasion)
                 }
             };
 
@@ -188,11 +226,35 @@ namespace backend.Controllers
                 return NotFound();
             }
 
+            // Xóa tất cả các bản ghi liên quan trong bảng payment
+            var relatedPayments = _context.Payments.Where(p => p.Orderid == id);
+            if (relatedPayments.Any())
+            {
+                _context.Payments.RemoveRange(relatedPayments);
+            }
 
+            // Xóa tất cả các bản ghi liên quan trong bảng orderDetails
+            var relatedOrderDetails = _context.OrderDetails.Where(od => od.Orderid == id);
+            if (relatedOrderDetails.Any())
+            {
+                _context.OrderDetails.RemoveRange(relatedOrderDetails);
+            }
+
+            // Xóa tất cả các bản ghi liên quan trong bảng deliveryInfo trước khi xóa đơn hàng
+            var relatedDeliveries = _context.DeliveryInfos.Where(di => di.Orderid == id);
+            if (relatedDeliveries.Any())
+            {
+                _context.DeliveryInfos.RemoveRange(relatedDeliveries);
+            }
+
+
+            // Sau đó, xóa đơn hàng
             _context.Orders.Remove(order);
+
+            // Lưu thay đổi
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(new {success= true});
         }
 
         private bool OrderExists(int id)

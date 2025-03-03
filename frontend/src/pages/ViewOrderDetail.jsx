@@ -12,7 +12,7 @@ const ViewOrderDetail = () => {
     const [viewOrderData, setViewOrderData] = useState([]);
     const getViewOrder = async () => {
         try {
-            const response = await axios.get(backendurl + `/api/OrderDetails/${orderDetailId}`)
+            const response = await axios.get(backendurl + `/api/Orders/${orderDetailId}`)
             if (response.data.success) {
                 setViewOrderData(response.data.data)
             }
@@ -57,37 +57,44 @@ const ViewOrderDetail = () => {
                         <p className={`${viewOrderData.status === "Successful flower delivery" ? "text-red-500" : ""}`}>Successful flower delivery</p>
                     </div>
                 </div>
-                <div className='border border-gray-500 rounded-md my-20 px-2 py-2'>
+                <div className='border border-gray-500 rounded-md  px-2 py-2'>
                     <div className='text-xl font-medium'>
                         <Title text1={"Recipient"} text2={"Information"} />
                     </div>
                     <div className='flex flex-row justify-between'>
-                        <p>Recipient name : {viewOrderData.recipientName}</p>
-                        <p>Phone : {viewOrderData.recipientPhone}</p>
-                        <p>Address : {viewOrderData.address}</p>
-                        <p>Payment method : {viewOrderData.paymentMethod}</p>
+                        <p className='font-medium'>Recipient name : {viewOrderData.deliveryInfo?.recipientName}</p>
+                        <p className='font-medium'>Phone : {viewOrderData.deliveryInfo?.recipientPhoneNo}</p>
+                        <p className='font-medium'>Address : {viewOrderData.deliveryAddress}</p>
+                        <p className='font-medium'>Payment method : {viewOrderData.paymentInfo?.paymentMethod}</p>
+                        <p className='font-medium'>Message :  {viewOrderData.occasion?.message}</p>
                     </div>
                 </div>
-                <div className='border border-gray-500 rounded-md my-20 px-2 py-2'>
+                <div className='border border-gray-500 rounded-md my-5 px-2 py-2'>
                     <div className='text-xl font-medium'>
                         <Title text1={"Order"} text2={"Detail"} />
                     </div>
-                    <div className='grid grid-cols-[2fr_1fr_1fr_2fr] bg-gray-500 px-1 py-1 text-white rounded-lg'>
+                    <div className='grid grid-cols-[1fr_2fr_1fr_1fr_1fr] bg-gray-500 px-1 py-1 text-white rounded-lg'>
+                        <p className='text-center'>Image</p>
                         <p className='text-center'>Flower Name </p>
                         <p className='text-center'>Price</p>
                         <p className='text-center'>Quantity</p>
-                        <p className='text-center'>Message</p>
+                        <p className='text-center'>Total sub</p>
                     </div>
-                    <div className='grid grid-cols-[2fr_1fr_1fr_2fr] items-center'>
-                        <div className='flex flex-row gap-10 items-center'>
-                            <img className='w-16 rounded-md mt-3' src={viewOrderData.flowerImage} alt='' />
-                            <p>{viewOrderData.flowerName}</p>
-                        </div>
-                        <p className='text-center'>{viewOrderData.price}</p>
-                        <p className='text-center'>{viewOrderData.quantity}</p>
-                        <p className='text-center'>{viewOrderData.message}</p>
-                    </div>
-                    <hr className='my-5'/>
+                    {viewOrderData.flowers && viewOrderData.flowers.length > 0 ? (
+                        viewOrderData.flowers.map((flower, index) => (
+                            <div key={index} className='grid grid-cols-[1fr_2fr_1fr_1fr_1fr] items-center'>
+                                <img className='w-16 rounded-md mt-3 ml-10' src={flower.image} alt='' />
+                                <p className='text-center'>{flower.flowerName}</p>
+                                <p className='text-center'>{flower.price}</p>
+                                <p className='text-center'>{flower.quantity}</p>
+                                <p className='text-center'>{flower.price * flower.quantity}</p>
+                            </div>
+                        ))
+                    ) : (
+                        <p>No flowers found for this order.</p>
+                    )}
+
+                    <hr className='my-5' />
                     <div className='flex justify-end'>
                         <p className='text-red-500 text-lg font-medium'>Total : $ {viewOrderData.total}</p>
                     </div>

@@ -19,6 +19,7 @@ import OrdersUser from "./pages/OrdersUser"
 import Order from "./pages/Orders"
 import ViewOrderDetail from "./pages/ViewOrderDetail"
 import ChangePassword from "./pages/ChangePassword"
+import ConfirmPayment from "./pages/ConfirmPayment"
 
 function App() {
   return (
@@ -40,8 +41,9 @@ function App() {
         <Route path="/place-order" element={<PlaceOrder />} />
         <Route path="/orders/:orderId" element={<OrdersUser />} />
         <Route path="/orders" element={<Order />} />
-        <Route path="/vieworder/:orderDetailId" element={<ViewOrderDetail />} />
+        <Route path="/view-order/:orderDetailId" element={<ViewOrderDetail />} />
         <Route path="/changepassword" element={<ChangePassword/>}/>
+        <Route path="/confirm-payment" element={<ConfirmPayment/>}/>
       </Routes>
       <Footer/>
     </div>

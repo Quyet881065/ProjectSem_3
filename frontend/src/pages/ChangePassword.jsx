@@ -80,7 +80,7 @@ const ChangePassword = () => {
                             onChange={handleChange} name='confirmPassword' value={changePassword.confirmPassword}
                             className="border  border-gray-300 rounded-md shadow-sm px-1 py-2 w-full max-w-[300px]" type='text' />
                     </div>
-                    {message && <p className='text-red-500'>{message}</p>}
+                    {message && <p className='text-green-500'>{message}</p>}
                     <div className='my-5'>
                         <button type='submit' className='border bg-blue-500 text-white text-xl font-normal px-5 py-2 rounded-lg'>Confirm</button>
                     </div>

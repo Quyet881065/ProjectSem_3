@@ -25,9 +25,20 @@ const Orders = () => {
     fetchOrdersData()
   }, [])
 
-  const handleViewOrder = (orderId) => {
-    navigate(`/orders/${orderId}`)
+  const deleteOrder = async(orderId)=>{
+    try {
+      const response = await axios.delete(backendUrl + `/api/Orders/${orderId}`)
+      if(response.data.success){
+        fetchOrdersData()
+      }
+    } catch (error) {
+      
+    }
   }
+
+  // const handleViewOrder = (orderId) => {
+  //   navigate(`/orders/${orderId}`)
+  // }
 
   const handleUpdateStatus = async (orderId) => {
     const newStatus = statusMap[orderId]; // Lay trang thai moi cho order tu statusMap
@@ -58,28 +69,37 @@ const Orders = () => {
   console.log(ordersData)
   return (
     <div>
-      <p>Orders All</p>
+      <p className='text-center text-3xl font-semibold pb-5'>Orders All</p>
       <div>
-        <div className='grid grid-cols-[1.5fr_1fr_2fr_1fr_1fr_5fr]'>
-          <p>Name</p>
-          <p>Phone</p>
-          <p>Address</p>
-          <p>Total</p>
-          <p>Status Order</p>
+        <input type='text' placeholder='Enter Name'/>
+      </div>
+      <div className='mt-5'>
+        <div className='grid grid-cols-[0.5fr_1.5fr_1fr_2fr_2fr_1fr_1.5fr_1fr_3fr] font-medium'>
+          <p>STT</p>
+          <p className='text-center'>Name</p>
+          <p className='text-center'>Phone</p>
+          <p className='text-center'>Address</p>
+          <p>Time Order</p>
+          <p className='text-center'>Total</p>
+          <p className='text-center'>Status Order</p>
+          <p className='text-center'>Payment Method</p>
           <p className='text-center'>Active</p>
         </div>
         {ordersData.map((item, index) => (
-          <div key={index} className='grid grid-cols-[1.5fr_1fr_2fr_1fr_1fr_5fr] border border-gray-200 py-3 my-1 '>
-            <p className='flex items-center'>{item.deliveryInfo.recipientName}</p>
-            <p className='flex items-center'>{item.deliveryInfo.recipientPhoneNo}</p>
-            <p className='flex items-center'>{item.deliveryAddress}</p>
-            <p className='flex items-center'>{item.total}</p>
-            <p className='flex items-center'>{item.status}</p>
-            <div className='flex flex-row justify-center gap-2 items-center'>
+          <div key={index} className='grid grid-cols-[0.5fr_1.5fr_1fr_2fr_2fr_1fr_1.5fr_1fr_3fr] border border-gray-200 pl-2'>
+            <p className='text-center'>{index + 1}</p>
+            <p className='text-center'>{item.deliveryInfo.recipientName}</p>
+            <p className=' text-center'>{item.deliveryInfo.recipientPhoneNo}</p>
+            <p className='text-center'>{item.deliveryAddress}</p>
+            <p>{item.orderDate}</p>
+            <p className=' text-center'>{item.total}</p>
+            <p className=' text-center'>{item.paymentInfo.paymentMethod}</p>
+            <p className=''>{item.status}</p>
+            <div className='flex flex-row justify-center gap-2 '>
               <div className=''>
                 <select value={statusMap[item.orderId]}
                   onChange={e => handleStatusChange(item.orderId, e.target.value)} // Cap nhat trang thai moi
-                  className='border py-1 rounded-md w-35'>
+                  className='border py-1 rounded-md w-20 text-xs'>
                   <option>Select Status</option>
                   <option value='Order received'>Order received</option>
                   <option value='Processing'>Processing</option>
@@ -87,9 +107,9 @@ const Orders = () => {
                   <option value='Successful flower delivery'>Successful flower delivery</option>
                 </select>
               </div>
-              <button onClick={() => handleUpdateStatus(item.orderId)} className='border px-1 py-1 bg-blue-500 text-white rounded-md cursor-pointer text-sm'>Upload Status Order</button>
-              <button onClick={() => handleViewOrder(item.orderId)} className='border px-1 py-1 bg-blue-500 text-white rounded-md cursor-pointer text-sm'>View Order</button>
-              <button className='border px-1 py-1 bg-red-500 text-white rounded-md cursor-pointer text-sm'>Delete Order</button>
+              <button onClick={() => handleUpdateStatus(item.orderId)} className='border py-1  bg-blue-500 text-white rounded-md cursor-pointer text-sm'>Upload Status Order</button>
+              {/* <button onClick={() => handleViewOrder(item.orderId)} className='border px-1 py-1 bg-blue-500 text-white rounded-md cursor-pointer text-sm'>View Order</button> */}
+              <button onClick={()=> deleteOrder(item.orderId)} className='border px-1 py-1 bg-red-500 text-white rounded-md cursor-pointer text-sm'>Delete Order</button>
             </div>
           </div>
         ))}

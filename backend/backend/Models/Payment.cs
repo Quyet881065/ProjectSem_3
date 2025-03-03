@@ -11,11 +11,17 @@ public partial class Payment
 
     public string? PaymentMethod { get; set; }
 
-    public DateOnly? PaymentDate { get; set; }
+    public DateTime? PaymentDate { get; set; }
 
     public decimal? PaymentAmount { get; set; }
 
     public string? PaymentStatus { get; set; }
+
+    public string? VnpayTransactionId { get; set; }
+
+    public string? VnpayResponseCode { get; set; }
+
+    public string? VnpayMessage { get; set; }
 
     public virtual Order? Order { get; set; }
 }

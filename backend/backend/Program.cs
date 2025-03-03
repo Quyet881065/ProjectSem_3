@@ -5,8 +5,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Cấu hình Stripe
+var stripeSettings = builder.Configuration.GetSection("Stripe");
+builder.Services.Configure<StripeSettings>(stripeSettings);
+StripeConfiguration.ApiKey = stripeSettings["SecretKey"];
 
 // Add services to the container.
 
@@ -36,6 +42,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 // Đăng ký UploadImageFlower với DI container
 builder.Services.AddScoped<UploadImageFlower>();
+
 
 
 //builder.Services.AddControllers()

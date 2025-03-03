@@ -17,9 +17,9 @@ const ShopContextProvider = props => {
 
     console.log(cartData);
 
+    const userId = localStorage.getItem('userId');
     const getUserCart = async () => {
         const token = localStorage.getItem('token');  
-        const userId = localStorage.getItem('userId');
         if (!userId) {
             console.error('User is not logged in or userId is not set.');
             return;
@@ -37,13 +37,13 @@ const ShopContextProvider = props => {
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.message || 'An error occurred while fetching the cart.');
+            // toast.error(error.message || 'An error occurred while fetching the cart.');
         }
     };
 
     useEffect(() => {
         getUserCart()
-    }, [])
+    }, [userId])
 
     const getCartCount = () => {
         return cartData.reduce((count, item) => count + item.quantity, 0);

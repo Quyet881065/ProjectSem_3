@@ -155,20 +155,23 @@ namespace backend.Controllers
         }
 
         // DELETE: api/OrderDetails/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOrderDetail(int id)
+        [HttpDelete("{orderId}/{flowerId}")]
+        public async Task<IActionResult> DeleteOrderDetail(int orderId, int flowerId)
         {
-            var orderDetail = await _context.OrderDetails.FindAsync(id);
+            var orderDetail = await _context.OrderDetails
+                .FirstOrDefaultAsync(od => od.Orderid == orderId && od.FlowerId == flowerId);
+
             if (orderDetail == null)
             {
-                return NotFound();
+                return NotFound(new { success = false, message = "Order detail not found" });
             }
 
             _context.OrderDetails.Remove(orderDetail);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(new { success = true, message = "Flower deleted successfully" });
         }
+
 
         private bool OrderDetailExists(int id)
         {

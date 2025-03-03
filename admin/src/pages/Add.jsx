@@ -9,6 +9,7 @@ const Add = () => {
     description: '',
     price: '',
     category: '',
+    productsInclude : '',
     bestseller: false,
     image: null
   });
@@ -31,6 +32,7 @@ const Add = () => {
       fromData.append('category', flowerData.category);
       fromData.append('bestseller', flowerData.bestseller);
       fromData.append('imageFile', flowerData.image);
+      fromData.append('productsInclude', flowerData.productsInclude);
 
       const response = await axios.post(backendUrl + '/api/Flowers', fromData)
       if (response.data.success) {
@@ -39,6 +41,7 @@ const Add = () => {
           description: '',
           price: '',
           category: '',
+          productsInclude :'',
           bestseller: false,
           image: null,
         })
@@ -61,6 +64,11 @@ const Add = () => {
         <input onChange={handleChange} type='text' value={flowerData.name} name='name'
           className='w-full max-w-[600px] px-3 py-2 border'
           placeholder='Flower Name' />
+      </div>
+      <div>
+        <p>Bouquet Include</p>
+        <input type='text' className='w-full max-w-[600px] px-3 py-2 border' 
+         onChange={handleChange} name='productsInclude' value={flowerData.productsInclude} />
       </div>
       <div>
         <p>Description</p>
@@ -96,9 +104,9 @@ const Add = () => {
         <label htmlFor='image' className='flex max-w-[100px]'>
           <img className='w-20' src={!flowerData.image ? assets.upload_area : URL.createObjectURL(flowerData.image)} alt='' />
           <input onChange={handleChange} type='file' name='image' hidden id='image' />
-        </label>
+        </label> 
       </div>
-      <button type='submit' className='w-27 bg-black text-white py-3 rounded-lg'>ADD</button>
+      <button type='submit' className='w-27 bg-blue-500 text-white py-3 rounded-lg cursor-pointer'>ADD</button>
     </form>
   )
 }
