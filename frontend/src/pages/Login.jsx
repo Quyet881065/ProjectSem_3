@@ -38,7 +38,7 @@ const Login = () => {
         dataToSend.gender = formData.gender;
         dataToSend.phone = formData.phone;
         dataToSend.address = formData.address;
-        const response = await axios.post(backendurl + '/api/Auth/register', dataToSend);
+        const response = await axios.post(backendurl + '/auth/register', dataToSend);
         if (response.data.success) {
           setToken(response.data.token);
           localStorage.setItem('token', response.data.token);
@@ -51,17 +51,15 @@ const Login = () => {
           toast.error(response.data.message);
         }
       } else {
-        const response = await axios.post(backendurl + '/api/Auth/login', dataToSend);
-        if (response.data.success) {
+        const response = await axios.post(backendurl + '/auth/login', dataToSend);
+        if (response.data) {
           const { token, userId, customerId } = response.data;
           setToken(token);
           localStorage.setItem('token', token);
-          localStorage.setItem('userId', userId);
-          localStorage.setItem('customerId', customerId ?? "null");
-          console.log(response.data.customerId);
-          console.log("CustomerID:", customerId);
-          console.log(response.data.message)
-          await getUserCart();
+          console.log(response)
+          // localStorage.setItem('userId', userId);
+          // localStorage.setItem('customerId', customerId ?? "null");
+          //await getUserCart();
           navigate('/')
         } else {
           //toast.error(response.data.message);
