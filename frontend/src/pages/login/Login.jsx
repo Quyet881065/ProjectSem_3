@@ -1,21 +1,40 @@
-
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react'
-import { ShopContext } from '../context/ShopContext';
+import { ShopContext } from '../../context/ShopContext';
 import { toast } from 'react-toastify';
+import { getToken } from '../../service/localStorageService';
+import GoogleIcon from "@mui/icons-material/Google";
+import { OAuthConfig } from '../../configuration/configuration';
+import { setToken } from '../../service/localStorageService';
+import { logIn, isAuthenticated } from '../../service/authenticationService';
+
 
 const Login = () => {
   const [current, setCurrent] = useState('Login');
-  const { backendurl, token, setToken, navigate , getUserCart } = useContext(ShopContext);
+  const { backendurl , navigate , getUserCart } = useContext(ShopContext);
   const [message, setMessage] = useState({ success: '', error: '' });
   const [formData, setformData] = useState({
-    email: '',
+    username: '',
     password: '',
     fullName: '',
     gender: '',
     phone: '',
     address: '',
   })
+
+  const handleClick = () => {
+    const callBackUrl = OAuthConfig.redirectUri;
+    const authUrl = OAuthConfig.authUri;
+    const googleClientId = OAuthConfig.clientId;
+
+     const targetUrl = `${authUrl}?redirect_uri=${encodeURIComponent(
+      callBackUrl
+    )}&response_type=code&client_id=${googleClientId}&scope=openid%20email%20profile`;
+
+    console.log(targetUrl);
+
+    window.location.href = targetUrl;
+  }
 
   const handleSubmit = e => {
     const { name, value } = e.target;
@@ -25,11 +44,17 @@ const Login = () => {
     }))
   }
 
+  useEffect(()=> {
+    const accessToken = getToken();
+    if(accessToken)
+      navigate("/")
+  },[navigate])
+
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     try {
       const dataToSend = {
-        email: formData.email,
+        username: formData.username,
         password: formData.password
       };
       if (current === "Sign Up") {
@@ -45,27 +70,19 @@ const Login = () => {
           setMessage({ success: "Registration successful! Redirecting to Login...", error: '' });
           setTimeout(() => {
             setCurrent("Login");
-            setformData({email:'', password:''})
+            setformData({username:'', password:''})
           }, 2000);
         } else {
           toast.error(response.data.message);
         }
       } else {
-        const response = await axios.post(backendurl + '/auth/login', dataToSend);
-        if (response.data) {
-          const { token, userId, customerId } = response.data;
-          setToken(token);
-          localStorage.setItem('token', token);
-          console.log(response)
-          // localStorage.setItem('userId', userId);
-          // localStorage.setItem('customerId', customerId ?? "null");
-          //await getUserCart();
-          navigate('/')
-        } else {
-          //toast.error(response.data.message);
-          setMessage(response.data.message);
-          console.log(response.data.message)
-        }
+       try {
+      const response = await logIn(formData.username, formData.password);
+      console.log("Response body:", response);
+      navigate("/");
+    } catch (error) {
+      console.error("Login error:", error);
+    }
       }
     } catch (error) {
       console.log(error)
@@ -93,7 +110,7 @@ const Login = () => {
       </div>
       {current === 'Login' ? '' : <input onChange={handleSubmit} name='phone' value={formData.phone} className='border border-gray-800 w-full px-3 py-2' type='text' placeholder='Phone' />}
       {current === 'Login' ? '' : <input onChange={handleSubmit} name='address' value={formData.address} className='border border-gray-800 w-full px-3 py-2' type='text' placeholder='Address' />}
-      <input onChange={handleSubmit} name='email' value={formData.email} className='w-full border border-gray-800 px-3 py-2' type='email' placeholder='Email' />
+      <input onChange={handleSubmit} name='username' value={formData.username} className='w-full border border-gray-800 px-3 py-2' type='text' placeholder='username' />
       <input onChange={handleSubmit} name='password' value={formData.password} className='w-full border border-gray-800 px-3 py-2' type='password' placeholder='Password' />
       <div className='w-full flex  justify-between text-sm mt-[-8px] '>
         <p onClick={() => navigate('/change-password')} className='cursor-pointer'>Forgot your password</p>
@@ -102,6 +119,11 @@ const Login = () => {
             ? <p onClick={() => setCurrent('Sign Up')} className='cursor-pointer'>Create account</p>
             : <p onClick={() => setCurrent('Login')} className='cursor-pointer'>Login here</p>
         }
+      </div>
+      <div className='flex items-center justify-center border px-5 py-2 rounded-lg'>
+        <button onClick={handleClick}>
+          <GoogleIcon/> Continue with Google
+         </button>
       </div>
       {message.error && <p className='text-red-500'>{message.error}</p>}
       {message.success && <p className='text-green-500'>{message.success}</p>}

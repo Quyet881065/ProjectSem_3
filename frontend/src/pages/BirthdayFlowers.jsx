@@ -2,9 +2,9 @@
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext';
-import Title from '../components/Title';
+import Title from '../components/layout/Title';
 import FlowerItem from '../components/FlowerItem';
-import OurPolicy from '../components/OurPolicy';
+import OurPolicy from '../components/home/OurPolicy';
 
 const BirthdayFlowers = () => {
   const [birthdayFlower, setBirthdayFlower] = useState([]);

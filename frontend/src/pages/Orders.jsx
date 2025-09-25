@@ -2,7 +2,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext'
 import axios from 'axios';
-import Title from '../components/Title';
+import Title from '../components/layout/Title';
 import { FaShoppingCart, FaCog, FaTruck, FaUserCheck } from 'react-icons/fa'
 
 const Order = () => {

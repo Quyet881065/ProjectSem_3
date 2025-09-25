@@ -1,10 +1,10 @@
 
 import React, { useContext, useEffect, useState } from 'react'
-import Title from '../components/Title'
+import Title from '../components/layout/Title'
 import { ShopContext } from '../context/ShopContext'
 import FlowerItem from '../components/FlowerItem';
 import RelatedFlowers from '../components/RelatedFlowers';
-import OurPolicy from '../components/OurPolicy';
+import OurPolicy from '../components/home/OurPolicy';
 
 const WeddingFlowers = () => {
   const { flowers, search, showSearch } = useContext(ShopContext);

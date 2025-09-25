@@ -4,7 +4,7 @@ import { assets } from '../assets/assets'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 import { ShopContext } from '../context/ShopContext'
-import Title from '../components/Title'
+import Title from '../components/layout/Title'
 import RelatedFlowers from '../components/RelatedFlowers'
 
 const FlowerDetail = () => {

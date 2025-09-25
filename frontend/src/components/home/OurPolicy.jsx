@@ -1,6 +1,6 @@
 import React from 'react';
-import { assets } from '../assets/assets';
-import Title from './Title';
+import { assets } from '../../assets/assets';
+import Title from '../layout/Title';
 import { motion } from 'framer-motion';  // Thêm framer-motion
 
 const OurPolicy = () => {

@@ -1,18 +1,19 @@
 import React, { useContext, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import { assets } from '../assets/assets.js'
-import { ShopContext } from '../context/ShopContext.jsx'
+import { assets } from '../../assets/assets.js'
+import { ShopContext } from '../../context/ShopContext.jsx'
+import { removeToken } from '../../service/localStorageService.js'
 
 const Navbar = () => {
     const [visible, setVisible] = useState(false);
     const { setShowSearch, navigate, token, setCartData, setToken, cartCount } = useContext(ShopContext);
     const logout = () => {
         navigate('/login');
-        localStorage.removeItem('token');
-        localStorage.removeItem('userId');
+       removeToken();
         setCartData([]);
         setToken('');
     }
+
     return (
         <div className='flex items-center justify-between py-5 font-medium'>
             <Link to='/'>
@@ -39,6 +40,10 @@ const Navbar = () => {
                     <p>ABOUT</p>
                     <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
                 </NavLink>
+                <NavLink to='/chat' className='flex flex-col items-center gap-1'>
+                    <p>CHAT</p>
+                    <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
+                </NavLink>
             </ul>
             <div className='flex items-center gap-6'>
                 <img onClick={() => setShowSearch(true)} className='w-5 cursor-pointer' src={assets.search_icon} alt='' />
@@ -50,8 +55,10 @@ const Navbar = () => {
                         }
                     }} src={assets.profile_icon} alt='' />
                     {token &&
-                        <div className='group-hover:block hidden absolute dropdown-menu right-0 pt-4 w-40'>
+                        <div className='absolute right-0 pt-4 w-40 hidden group-hover:block z-50'>
                             <div className='flex flex-col gap-2 bg-slate-200 px-5 py-3 text-gray-500 rounded w-full'>
+                                <p className='cursor-pointer hover:text-black text-center'
+                                   onClick={() => navigate('/profile')} >Profile</p>
                                 <p onClick={() => navigate('/orders')}
                                     className='cursor-pointer hover:text-black text-center'>Orders</p>
                                 <p onClick={() => navigate('/changepassword')} className='cursor-pointer hover:text-black text-center whitespace-nowrap'>Change Password</p>
@@ -63,8 +70,6 @@ const Navbar = () => {
                 <Link className='relative' to="/cart">
                     <img src={assets.cart_icon} className='w-5 min-w-5 cursor-pointer' />
                     <p className='absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white rounded-full aspect-square text-[8px]'>{cartCount}</p>
-                    {/* leading-4: Thiết lập khoảng cách dòng (line-height) là 1rem (4 * 0.25rem = 1rem)
-               aspect-square: Giữ tỷ lệ giữa chiều rộng và chiều cao của phần tử là 1:1, tạo ra hình vuông (hoặc hình tròn khi sử dụng với rounded-full). */}
                 </Link>
                 <img onClick={() => setVisible(true)} src={assets.menu_icon} alt='' className='w-5 cursor-pointer sm:hidden' />
             </div>

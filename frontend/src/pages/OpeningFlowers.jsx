@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react'
-import Title from '../components/Title'
+import Title from '../components/layout/Title'
 import FlowerItem from '../components/FlowerItem'
 import { ShopContext } from '../context/ShopContext';
 import axios from 'axios';
-import OurPolicy from '../components/OurPolicy';
+import OurPolicy from '../components/home/OurPolicy';
 
 const OpeningFlowers = () => {
     const [openingFlowers, setOpeningFlowers] = useState([]);

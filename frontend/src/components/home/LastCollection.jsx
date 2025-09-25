@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
-import Title from './Title';
-import FlowerItem from './FlowerItem';
-import { ShopContext } from '../context/ShopContext';
+import Title from '../layout/Title';
+import FlowerItem from '../FlowerItem';
+import { ShopContext } from '../../context/ShopContext';
 import { motion } from 'framer-motion';  // Thêm framer-motion
 
 const LastCollection = () => {

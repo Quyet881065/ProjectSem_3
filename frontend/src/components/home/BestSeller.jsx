@@ -1,8 +1,8 @@
 
 import React, { useContext, useEffect, useState } from 'react'
-import { ShopContext } from '../context/ShopContext'
-import Title from './Title'
-import FlowerItem from './FlowerItem'
+import { ShopContext } from '../../context/ShopContext'
+import Title from '../layout/Title'
+import FlowerItem from '../FlowerItem'
 import { motion } from 'framer-motion'
 
 const BestSeller = () => {

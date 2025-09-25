@@ -2,6 +2,8 @@ import { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
+import { getToken } from "../service/localStorageService";
+
 export const ShopContext = createContext();
 
 const ShopContextProvider = props => {
@@ -15,11 +17,18 @@ const ShopContextProvider = props => {
     const [cartData, setCartData] = useState([]);
     const [cartCount, setCartCount] = useState(0);
 
-    console.log(cartData);
+    // https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${accessToken}
+
+    useEffect(() => {
+        const savedToken = localStorage.getItem("accessToken");
+        if (savedToken) {
+            setToken(savedToken);
+        }
+    }, []);
+
 
     const userId = localStorage.getItem('userId');
     const getUserCart = async () => {
-        const token = localStorage.getItem('token');  
         if (!userId) {
             console.error('User is not logged in or userId is not set.');
             return;
@@ -104,15 +113,8 @@ const ShopContextProvider = props => {
         }
     }
 
-    useEffect(() => {
-        if (!token && localStorage.getItem('token')) {
-            setToken(localStorage.getItem('token'));
-            // getUserCart(localStorage.getItem('token'));
-        }
-    }, []);
-
     const value = {
-        search, setSearch, showSearch, setShowSearch,
+        search, setSearch, showSearch, setShowSearch, 
         flowers, navigate, token, setToken, backendurl, currency,
         cartData, setCartData, clearCart, getCartCount, getCartAmount, addToCartContext, cartCount, getUserCart,
     }

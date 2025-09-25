@@ -1,8 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
-import Title from '../components/Title';
+import Title from '../components/layout/Title';
 import { ShopContext } from '../context/ShopContext';
 import { assets } from '../assets/assets';
-import CartTotal from '../components/CartTotal';
+import CartTotal from '../components/layout/CartTotal';
 import axios from 'axios';  // Ensure axios is imported
 import { toast } from 'react-toastify';  // Assuming you are using react-toastify for error messages
 

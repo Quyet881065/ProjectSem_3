@@ -4,7 +4,7 @@ import { ShopContext } from '../context/ShopContext'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
 import { FaShoppingCart, FaCog, FaTruck, FaUserCheck } from 'react-icons/fa'
-import Title from '../components/Title'
+import Title from '../components/layout/Title'
 
 const ViewOrderDetail = () => {
     const { orderDetailId } = useParams();

@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from 'react'
 import React from 'react'
 import axios from 'axios'
-import Title from '../components/Title'
-import CartTotal from '../components/CartTotal'
+import Title from '../components/layout/Title'
+import CartTotal from '../components/layout/CartTotal'
 import { ShopContext } from '../context/ShopContext'
 
 const PlaceOrder = () => {

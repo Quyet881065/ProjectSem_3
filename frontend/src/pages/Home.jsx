@@ -1,10 +1,9 @@
+import LogoHome from '../components/home/LogoHome'
+import LastCollection from '../components/home/LastCollection'
+import BestSeller from '../components/home/BestSeller'
+import OurPolicy from '../components/home/OurPolicy'
+import NewsLetterBox from '../components/home/NewsLetterBox'
 
-import React from 'react'
-import LogoHome from '../components/LogoHome'
-import LastCollection from '../components/LastCollection'
-import BestSeller from '../components/BestSeller'
-import OurPolicy from '../components/OurPolicy'
-import NewsLetterBox from '../components/NewsLetterBox'
 
 const Home = () => {
   return (

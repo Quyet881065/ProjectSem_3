@@ -1,13 +1,13 @@
 import { Routes, Route, useNavigate } from "react-router-dom"
 import { useContext, useEffect } from "react"
 import { ToastContainer, toast } from "react-toastify"
-import Navbar from "./components/Navbar"
-import SearchBar from "./components/SearchBar"
+import Navbar from "./components/layout/Navbar"
+import SearchBar from "./components/layout/SearchBar"
 import Home from "./pages/Home"
 import About from "./pages/About"
-import Footer from "./components/Footer"
+import Footer from "./components/layout/Footer"
 import FlowerDetail from "./pages/FlowerDetail"
-import Login from "./pages/Login"
+import Login from "./pages/login/Login"
 import RequestChangePassWord from "./components/RequestChangePassWord"
 import ResetPassword from "./components/ResetPassword"
 import Cart from "./pages/Cart"
@@ -18,8 +18,12 @@ import BirthdayFlowers from "./pages/BirthdayFlowers"
 import OrdersUser from "./pages/OrdersUser"
 import Order from "./pages/Orders"
 import ViewOrderDetail from "./pages/ViewOrderDetail"
-import ChangePassword from "./pages/ChangePassword"
+//import ChangePassword from "./pages/ChangePassword"
 import ConfirmPayment from "./pages/ConfirmPayment"
+import Authentication from "./pages/login/Authentication"
+import ProfileUser from "./components/layout/ProfileUser"
+import { CreatePassword } from "./pages/login/CreatePassword"
+import { Chat } from "./pages/Chat"
 
 function App() {
   return (
@@ -42,8 +46,11 @@ function App() {
         <Route path="/orders/:orderId" element={<OrdersUser />} />
         <Route path="/orders" element={<Order />} />
         <Route path="/view-order/:orderDetailId" element={<ViewOrderDetail />} />
-        <Route path="/changepassword" element={<ChangePassword/>}/>
+        <Route path="/profile" element={<ProfileUser/>}/>
         <Route path="/confirm-payment" element={<ConfirmPayment/>}/>
+        <Route path="/authentication" element={<Authentication/>}/>
+        <Route path="/create-password" element={<CreatePassword/>}/>
+        <Route path="/chat" element={<Chat/>}/>
       </Routes>
       <Footer/>
     </div>
