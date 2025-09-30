@@ -1,5 +1,6 @@
 package com.web.shopflower.controllers;
 
+import com.web.shopflower.dto.ApiResponse;
 import com.web.shopflower.dto.request.AuthenticationRequest;
 import com.web.shopflower.dto.response.AuthenticationResponse;
 import com.web.shopflower.service.AuthenticationService;
@@ -16,7 +17,7 @@ public class AuthenticationController {
     private AuthenticationService authenticationService;
 
     @PostMapping("/login")
-    AuthenticationResponse authentication(@RequestBody AuthenticationRequest request){
+    ApiResponse<AuthenticationResponse> authentication(@RequestBody AuthenticationRequest request){
         return authenticationService.authentication(request);
     }
 }

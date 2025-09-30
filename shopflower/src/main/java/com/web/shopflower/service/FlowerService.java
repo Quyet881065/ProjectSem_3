@@ -1,50 +1,81 @@
 package com.web.shopflower.service;
 
+import com.web.shopflower.dto.ApiResponse;
 import com.web.shopflower.dto.request.FlowerRequest;
+import com.web.shopflower.dto.response.FileDataResponse;
+import com.web.shopflower.dto.response.FileResponse;
 import com.web.shopflower.dto.response.FlowerResponse;
 import com.web.shopflower.models.FlowerEntity;
 import com.web.shopflower.repository.FlowerRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class FlowerService {
     @Autowired
     private FlowerRepository flowerRepository;
+    private final FileStorageService fileStorageService;
 
-    public Object createFlower(FlowerRequest request){
+    public FlowerResponse createFlower(FlowerRequest request )  {
+
         FlowerEntity flowerEntity = new FlowerEntity();
-        flowerEntity.setId(UUID.randomUUID().toString());
         flowerEntity.setProductName(request.getProductName());
         flowerEntity.setPrice(request.getPrice());
-        flowerEntity.setYears(request.getYears());
         flowerEntity.setUrl(request.getUrl());
+        flowerEntity.setDescription(request.getDescription());
+        flowerEntity.setProductsInclude(request.getProductsInclude());
 
-       FlowerEntity saveFlower =  flowerRepository.save(flowerEntity);
-       Map<String, Object> result = new HashMap<>();
-       result.put("success", true);
-       result.put("message", "Flower created flower");
-       result.put("data", saveFlower);
-       return result;
+        FlowerEntity savedFlower = flowerRepository.save(flowerEntity);
+
+        FlowerResponse response = new FlowerResponse();
+        response.setFlowerName(savedFlower.getProductName());
+        response.setPrice(savedFlower.getPrice());
+        response.setUrl(savedFlower.getUrl());
+        response.setDescription(savedFlower.getDescription());
+        response.setFlowerInclude(savedFlower.getProductsInclude());
+
+        return response;
     }
 
-    public List<FlowerResponse> getAllFlower(){
+    public ApiResponse<List<FlowerResponse>> getAllFlower(){
         List<FlowerEntity> flowers = flowerRepository.findAll();
         List<FlowerResponse> response = new ArrayList<>();
+
         for(FlowerEntity flower : flowers){
             FlowerResponse flowerResponse = new FlowerResponse();
-            flowerResponse.setUrl(flower.getUrl());
-            flowerResponse.setYears(flower.getYears());
+            // Nếu bạn lưu tên file trong DB, tạo url đầy đủ
+            String fileName = flower.getUrl(); // giả sử DB lưu fileName, ví dụ "uuid_hoahong.webp"
+            if(fileName != null && !fileName.isEmpty()){
+                String fullUrl = fileStorageService.getUrlPrefix() + fileName;
+                flowerResponse.setUrl(fullUrl);
+                log.info("full url : {}", fullUrl);
+            } else {
+                flowerResponse.setUrl(null);
+            }
+            flowerResponse.setId(flower.getId());
             flowerResponse.setPrice(flower.getPrice());
-            flowerResponse.setProductName(flower.getProductName());
+            flowerResponse.setFlowerName(flower.getProductName());
+            flowerResponse.setDescription(flower.getDescription());
+            flowerResponse.setFlowerInclude(flower.getProductsInclude());
             response.add(flowerResponse);
         }
-        return response;
+       return ApiResponse.<List<FlowerResponse>>builder()
+                .results(response)
+                .build();
     }
 
     public FlowerResponse getFlower(String id){
@@ -53,11 +84,53 @@ public class FlowerService {
         if(flowerEntity == null){
             return null;
         }
+
         FlowerResponse flowerResponse = new FlowerResponse();
-        flowerResponse.setProductName(flowerEntity.getProductName());
-        flowerResponse.setPrice(flowerResponse.getPrice());
-        flowerResponse.setYears(flowerResponse.getYears());
-        flowerResponse.setUrl(flowerResponse.getUrl());
+        String fileName = flowerEntity.getUrl();
+        if(fileName != null && !fileName.isEmpty()){
+            String fullUrl = fileStorageService.getUrlPrefix() + fileName;
+            flowerResponse.setUrl(fullUrl);
+        }
+
+        flowerResponse.setFlowerName(flowerEntity.getProductName());
+        flowerResponse.setPrice(flowerEntity.getPrice());
+        flowerResponse.setDescription(flowerEntity.getDescription());
+        flowerResponse.setFlowerInclude(flowerEntity.getProductsInclude());
         return flowerResponse;
+    }
+
+    public FileDataResponse download(String fileName){
+        try {
+            if(fileName == null || fileName.isEmpty()){
+                throw new RuntimeException("File name is empty!");
+            }
+
+            // Load file từ storage
+            Resource resource = fileStorageService.loadFileAsResource(fileName);
+
+            // Lấy content type, fallback sang application/octet-stream
+            String contentType = Files.probeContentType(resource.getFile().toPath());
+            if(contentType == null){
+                contentType = "application/octet-stream";
+            }
+
+            return FileDataResponse.builder()
+                    .contentType(contentType)
+                    .resource(resource)
+                    .build();
+
+        } catch (IOException e) {
+            log.error("File not found or error loading file: {}", fileName, e);
+            throw new RuntimeException("Could not download file: " + fileName, e);
+        }
+    }
+
+    public FileResponse uploadFile(MultipartFile file) throws IOException {
+        // Store file
+        var fileInfo = fileStorageService.storeFile(file);
+
+        return FileResponse.builder()
+                .url(fileInfo.getUrl())
+                .build();
     }
 }

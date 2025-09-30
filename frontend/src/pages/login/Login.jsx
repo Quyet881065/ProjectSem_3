@@ -7,19 +7,16 @@ import GoogleIcon from "@mui/icons-material/Google";
 import { OAuthConfig } from '../../configuration/configuration';
 import { setToken } from '../../service/localStorageService';
 import { logIn, isAuthenticated } from '../../service/authenticationService';
-
+import { register } from '../../service/userService';
+import { data } from 'react-router-dom';
 
 const Login = () => {
   const [current, setCurrent] = useState('Login');
-  const { backendurl , navigate , getUserCart } = useContext(ShopContext);
+  const { backendurl, navigate, getUserCart } = useContext(ShopContext);
   const [message, setMessage] = useState({ success: '', error: '' });
   const [formData, setformData] = useState({
     username: '',
     password: '',
-    fullName: '',
-    gender: '',
-    phone: '',
-    address: '',
   })
 
   const handleClick = () => {
@@ -27,12 +24,10 @@ const Login = () => {
     const authUrl = OAuthConfig.authUri;
     const googleClientId = OAuthConfig.clientId;
 
-     const targetUrl = `${authUrl}?redirect_uri=${encodeURIComponent(
+    const targetUrl = `${authUrl}?redirect_uri=${encodeURIComponent(
       callBackUrl
     )}&response_type=code&client_id=${googleClientId}&scope=openid%20email%20profile`;
-
     console.log(targetUrl);
-
     window.location.href = targetUrl;
   }
 
@@ -44,11 +39,11 @@ const Login = () => {
     }))
   }
 
-  useEffect(()=> {
+  useEffect(() => {
     const accessToken = getToken();
-    if(accessToken)
+    if (accessToken)
       navigate("/")
-  },[navigate])
+  }, [navigate])
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
@@ -59,30 +54,26 @@ const Login = () => {
       };
       if (current === "Sign Up") {
         // Nếu là đăng ký, thêm các trường khác
-        dataToSend.fullName = formData.fullName;
-        dataToSend.gender = formData.gender;
-        dataToSend.phone = formData.phone;
-        dataToSend.address = formData.address;
-        const response = await axios.post(backendurl + '/auth/register', dataToSend);
-        if (response.data.success) {
-          setToken(response.data.token);
-          localStorage.setItem('token', response.data.token);
-          setMessage({ success: "Registration successful! Redirecting to Login...", error: '' });
+        dataToSend.fullname = formData.fullname;
+        dataToSend.email = formData.email;
+        const response = await register(dataToSend);
+        console.log("Response body:", response);
+        if (response.data) {
           setTimeout(() => {
             setCurrent("Login");
-            setformData({username:'', password:''})
+            setformData({ username: '', password: '' })
           }, 2000);
         } else {
-          toast.error(response.data.message);
+          toast.error(response.data);
         }
       } else {
-       try {
-      const response = await logIn(formData.username, formData.password);
-      console.log("Response body:", response);
-      navigate("/");
-    } catch (error) {
-      console.error("Login error:", error);
-    }
+        try {
+          const response = await logIn(formData.username, formData.password);
+          console.log("Response body:", response);
+          navigate("/");
+        } catch (error) {
+          console.error("Login error:", error);
+        }
       }
     } catch (error) {
       console.log(error)
@@ -90,28 +81,20 @@ const Login = () => {
       setMessage(error.message)
     }
   }
+  console.log("formData", formData);
 
   return (
-    <form onSubmit={onSubmitHandler} className='flex flex-col items-center w-[90%] sm:max-w-96 m-auto text-gray-800 gap-4 border-t my-5'>
+    <form onSubmit={onSubmitHandler} className='flex flex-col items-center w-[90%] sm:max-w-[420px] m-auto text-gray-800 gap-4 border-t my-5'>
       <div className='inline-flex items-center gap-2  mb-2'>
         <p className='prata-regular text-3xl'>{current}</p>
         <hr className='border-none h-[1.5px] bg-gray-700 w-8' />
       </div>
-      <div className='flex flex-row gap-5'>
-        {current === 'Login' ? '' : <input onChange={handleSubmit} name='fullName' value={formData.fullName} className='border border-gray-800  px-3 py-2' type='text' placeholder='FullName' />}
-        {current === 'Login' ? '' :
-          <select onChange={handleSubmit} name='gender' value={formData.gender} className='border border-gray-300 px-2'>
-            <option value="">Select Gender</option>
-            <option value="Men">Men</option>
-            <option value="Female">Female</option>
-            <option value="Other Options">Other Options</option>
-          </select>
-        }
+      <div className='flex gap-2'>
+        {current === 'Login' ? '' : <input onChange={handleSubmit} name='fullname' value={formData.fullname} className='border border-gray-800  px-3 py-2' type='text' placeholder='Full Name' />}
+        {current === 'Login' ? '' : <input onChange={handleSubmit} name='email' value={formData.email} className='border border-gray-800  px-3 py-2' type='text' placeholder='Email' />}
       </div>
-      {current === 'Login' ? '' : <input onChange={handleSubmit} name='phone' value={formData.phone} className='border border-gray-800 w-full px-3 py-2' type='text' placeholder='Phone' />}
-      {current === 'Login' ? '' : <input onChange={handleSubmit} name='address' value={formData.address} className='border border-gray-800 w-full px-3 py-2' type='text' placeholder='Address' />}
-      <input onChange={handleSubmit} name='username' value={formData.username} className='w-full border border-gray-800 px-3 py-2' type='text' placeholder='username' />
-      <input onChange={handleSubmit} name='password' value={formData.password} className='w-full border border-gray-800 px-3 py-2' type='password' placeholder='Password' />
+      <input onChange={handleSubmit} name='username' value={formData.username} className='w-full border border-gray-800 px-3 py-2' type='text' placeholder='User Name' />
+      <input onChange={handleSubmit} name='password' value={formData.password} className='w-full border border-gray-800 px-3 py-2' type='password' placeholder='Pass Word' />
       <div className='w-full flex  justify-between text-sm mt-[-8px] '>
         <p onClick={() => navigate('/change-password')} className='cursor-pointer'>Forgot your password</p>
         {
@@ -122,8 +105,8 @@ const Login = () => {
       </div>
       <div className='flex items-center justify-center border px-5 py-2 rounded-lg'>
         <button onClick={handleClick}>
-          <GoogleIcon/> Continue with Google
-         </button>
+          <GoogleIcon /> Continue with Google
+        </button>
       </div>
       {message.error && <p className='text-red-500'>{message.error}</p>}
       {message.success && <p className='text-green-500'>{message.success}</p>}

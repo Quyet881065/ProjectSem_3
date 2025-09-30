@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FlowerRepository extends JpaRepository<FlowerEntity, String> {
+    FlowerEntity findByUrl(String fileName);
 }

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState , useEffect} from 'react';
 import Title from '../layout/Title';
 import FlowerItem from '../FlowerItem';
 import { ShopContext } from '../../context/ShopContext';
@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';  // Thêm framer-motion
 
 const LastCollection = () => {
   const { flowers } = useContext(ShopContext);
-
+  console.log(flowers);
   return (
     <motion.div
       className='my-10'
@@ -21,8 +21,8 @@ const LastCollection = () => {
         {flowers.map((item, index) => (
           <FlowerItem
             key={index}
-            id={item.flowerId}
-            image={item.image}
+            id={item.id}
+            imageUrl={item.url} // truyền url gốc
             name={item.flowerName}
             price={item.price}
           />

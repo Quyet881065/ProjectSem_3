@@ -3,11 +3,12 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
 import { getToken } from "../service/localStorageService";
+import { flowersData } from "../data/flowersData";
 
 export const ShopContext = createContext();
 
 const ShopContextProvider = props => {
-    const backendurl = import.meta.env.VITE_BACKEND_URL;
+    const backendurl = import.meta.env.VITE_API_GATEWAY;
     const [search, setSearch] = useState('')
     const [showSearch, setShowSearch] = useState(false);
     const [flowers, setFlowers] = useState([]);
@@ -83,20 +84,30 @@ const ShopContextProvider = props => {
     //All flower 
     const getFlowersData = async () => {
         try {
-            const response = await axios.get(backendurl + '/api/Flowers');
-            if (response.data.success) {
-                setFlowers(response.data.flowers);
+            const response = await axios.get(backendurl + '/flowers', {
+                headers: {
+                    Authorization: `Bearer ${getToken()}`,
+                }
+            });
+            if (response.data.results) {
+                setFlowers(response.data.results);
             } else {
                 toast.error(response.data.message)
             }
         } catch (error) {
+            // fallback mock data
+            setFlowers(flowersData);
             console.log(error);
             toast.error(error.message);
         }
     }
     useEffect(() => {
         getFlowersData();
+    
     }, []);
+
+  
+    console.log(flowers);
 
     const clearCart = async () => {
         const userId = localStorage.getItem("userId");
@@ -114,8 +125,8 @@ const ShopContextProvider = props => {
     }
 
     const value = {
-        search, setSearch, showSearch, setShowSearch, 
-        flowers, navigate, token, setToken, backendurl, currency,
+        search, setSearch, showSearch, setShowSearch,
+        flowers, navigate, token, setToken, backendurl, 
         cartData, setCartData, clearCart, getCartCount, getCartAmount, addToCartContext, cartCount, getUserCart,
     }
 

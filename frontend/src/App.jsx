@@ -23,7 +23,7 @@ import ConfirmPayment from "./pages/ConfirmPayment"
 import Authentication from "./pages/login/Authentication"
 import ProfileUser from "./components/layout/ProfileUser"
 import { CreatePassword } from "./pages/login/CreatePassword"
-import { Chat } from "./pages/Chat"
+// import { Chat } from "./pages/Chat"
 
 function App() {
   return (
@@ -50,7 +50,7 @@ function App() {
         <Route path="/confirm-payment" element={<ConfirmPayment/>}/>
         <Route path="/authentication" element={<Authentication/>}/>
         <Route path="/create-password" element={<CreatePassword/>}/>
-        <Route path="/chat" element={<Chat/>}/>
+        {/* <Route path="/chat" element={<Chat/>}/> */}
       </Routes>
       <Footer/>
     </div>

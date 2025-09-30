@@ -3,6 +3,12 @@ import { httpClient } from "../configuration/httpClient";
 import {API} from "../configuration/configuration";
 import { getToken } from "./localStorageService";
 
+export const register = async(formData) => {
+   return await httpClient.post(API.REGISTER , formData)
+}
+
+console.log("get token in userService:", getToken());
+
 export const getMyInfo = async()=>{
     return await httpClient.get(API.MY_INFO,{
         headers: {

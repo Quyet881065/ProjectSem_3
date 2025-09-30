@@ -5,22 +5,22 @@ import { isAuthenticated } from "../../service/authenticationService";
 
 export default function ProfileUser() {
     const [userDetails, setUserDetails] = useState({});
-    const {navigate} = useContext(ShopContext);
-    
-    const getUserDetails = async()=>{
+    const { navigate } = useContext(ShopContext);
+
+    const getUserDetails = async () => {
         const response = await getMyInfo();
         const data = response.data;
         setUserDetails(data.results);
         console.log("User Details:", data);
     }
 
-    useEffect(()=>{
-        if(!isAuthenticated){
+    useEffect(() => {
+        if (!isAuthenticated) {
             navigate("/login");
-        }else{
+        } else {
             getUserDetails();
         }
-    },[navigate])
+    }, [navigate])
 
     return (
         <div>
@@ -30,9 +30,14 @@ export default function ProfileUser() {
                         <h3 className="font-bold text-3xl">User Profile</h3>
                     </div>
                     <div className="border p-20 flex flex-col items-center gap-5 shadow-lg rounded-lg">
-                        <img className="w-[120px] rounded-full" src={userDetails.avatar}/>
-                        <p>{userDetails.username}</p>
-                        <p>{userDetails.firstname}</p>
+                        <img
+                            className="w-[120px] rounded-full"
+                            src={userDetails.avatar ? userDetails.avatar : `https://ui-avatars.com/api/?name=${userDetails.username}&background=random`}
+                            alt="User Avatar"
+                        />
+                        <p className="text-xl font-medium">User name : {userDetails.username}</p>
+                        <p className="text-xl font-medium">Full name : {userDetails.fullname}</p>
+                        <p className="text-xl font-medium">Email : {userDetails.email}</p>
                     </div>
                 </div>
             )}

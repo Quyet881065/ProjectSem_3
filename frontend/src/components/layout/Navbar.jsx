@@ -3,15 +3,15 @@ import { Link, NavLink } from 'react-router-dom'
 import { assets } from '../../assets/assets.js'
 import { ShopContext } from '../../context/ShopContext.jsx'
 import { removeToken } from '../../service/localStorageService.js'
+import { getToken } from '../../service/localStorageService.js'
 
 const Navbar = () => {
     const [visible, setVisible] = useState(false);
-    const { setShowSearch, navigate, token, setCartData, setToken, cartCount } = useContext(ShopContext);
+    const { setShowSearch, navigate, setCartData, cartCount } = useContext(ShopContext);
     const logout = () => {
         navigate('/login');
        removeToken();
         setCartData([]);
-        setToken('');
     }
 
     return (
@@ -40,10 +40,6 @@ const Navbar = () => {
                     <p>ABOUT</p>
                     <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
                 </NavLink>
-                <NavLink to='/chat' className='flex flex-col items-center gap-1'>
-                    <p>CHAT</p>
-                    <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
-                </NavLink>
             </ul>
             <div className='flex items-center gap-6'>
                 <img onClick={() => setShowSearch(true)} className='w-5 cursor-pointer' src={assets.search_icon} alt='' />
@@ -54,7 +50,7 @@ const Navbar = () => {
                             navigate('/login');
                         }
                     }} src={assets.profile_icon} alt='' />
-                    {token &&
+                    {getToken() &&
                         <div className='absolute right-0 pt-4 w-40 hidden group-hover:block z-50'>
                             <div className='flex flex-col gap-2 bg-slate-200 px-5 py-3 text-gray-500 rounded w-full'>
                                 <p className='cursor-pointer hover:text-black text-center'

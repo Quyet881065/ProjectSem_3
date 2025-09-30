@@ -6,23 +6,25 @@ import axios from 'axios'
 import { ShopContext } from '../context/ShopContext'
 import Title from '../components/layout/Title'
 import RelatedFlowers from '../components/RelatedFlowers'
+import { getToken } from '../service/localStorageService'
 
 const FlowerDetail = () => {
+  const {backendurl} = useContext(ShopContext)
   const { flowerParamId } = useParams();
-  const backendurl = import.meta.env.VITE_BACKEND_URL;
   const currency = '$';
   const [flowerData, setFlowerData] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const token = localStorage.getItem('token');
   const { addToCartContext, getCartCount } = useContext(ShopContext)
 
   useEffect(() => {
     // Find the flower based on the URL parameter
     const getFlowerById = async () => {
       try {
-        const response = await axios.get(`${backendurl}/api/Flowers/${flowerParamId}`);
-        if (response.data.success) {
-          setFlowerData(response.data.flower);
+        const response = await axios.get(`${backendurl}/flowers/${flowerParamId}`, {
+          headers: {Authorization:`Bearer ${getToken()}`}
+        });
+        if (response.data) {
+          setFlowerData(response.data);
         } else {
           toast.error('Flower not found.');
         }
@@ -85,14 +87,16 @@ const FlowerDetail = () => {
     <div className='border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100'>
       <div className='flex flex-col sm:flex-row gap-5'>
         <div className='w-[40%]'>
-          <img className='rounded-lg shadow-lg w-full max-w-[370px]' src={flowerData.image} alt={flowerData.flowerName} />
+          <img className='rounded-lg shadow-lg w-full max-w-[370px]' src={flowerData.url} alt={flowerData.flowerName} />
         </div>
         <div className='flex-1'>
-          <div className='flex flex-col gap-3'>
-            <h1 className='font-medium text-xl'>Name : {flowerData.flowerName}</h1>
-            <p className='font-medium text-xl'>Price: {currency}{flowerData.price}</p>
-            <p className='text-md'>{flowerData.description}</p>
-            <p className='font-medium text-xl'>Products include: {flowerData.productsInclude}</p>
+          <div className='flex flex-col gap-8'>
+            <h1 className='font-medium text-2xl'>Name : {flowerData.flowerName}</h1>
+            <p className='font-medium text-2xl'>
+              Price: {Number(flowerData.price).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
+            </p>
+            <p className='text-xl'>{flowerData.description}</p>
+            <p className='font-medium text-xl'>Image include: {flowerData.flowerInclude}</p>
             <div className='flex flex-row items-center gap-5'>
               <p className='font-medium text-xl'>Quantity: </p>
               <input
@@ -110,7 +114,7 @@ const FlowerDetail = () => {
         </div>
       </div>
       <hr className='mt-8 sm:w-4/5 py-5' />
-      <div>
+      <div className='my-20'>
         <div className='text-center text-3xl'>
           <Title text2={"Why should you use our service?"} />
         </div>
@@ -134,7 +138,7 @@ const FlowerDetail = () => {
         </div>
       </div>
       <div>
-        <RelatedFlowers category={flowerData.category}/>
+        <RelatedFlowers/>
       </div>
     </div>
   )
