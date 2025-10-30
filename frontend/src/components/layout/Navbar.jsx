@@ -4,20 +4,22 @@ import { assets } from '../../assets/assets.js'
 import { ShopContext } from '../../context/ShopContext.jsx'
 import { removeToken } from '../../service/localStorageService.js'
 import { getToken } from '../../service/localStorageService.js'
+import { isAuthenticated } from '../../service/authenticationService.js'
 
 const Navbar = () => {
     const [visible, setVisible] = useState(false);
-    const { setShowSearch, navigate, setCartData, cartCount } = useContext(ShopContext);
+    const { setShowSearch, navigate, setCartData, cartCount, setToken } = useContext(ShopContext);
     const logout = () => {
         navigate('/login');
        removeToken();
+       setToken(null);
         setCartData([]);
     }
 
     return (
         <div className='flex items-center justify-between py-5 font-medium'>
             <Link to='/'>
-                <img className='w-20' src={assets.logo} alt='' />
+                <img className='w-20 rounded-xl' src={assets.logo} alt='' />
             </Link>
             <ul className='hidden sm:flex gap-5 text-sm text-gray-700'>
                 <NavLink to='/' className='flex flex-col items-center gap-1'>
@@ -50,7 +52,7 @@ const Navbar = () => {
                             navigate('/login');
                         }
                     }} src={assets.profile_icon} alt='' />
-                    {getToken() &&
+                    {isAuthenticated() &&
                         <div className='absolute right-0 pt-4 w-40 hidden group-hover:block z-50'>
                             <div className='flex flex-col gap-2 bg-slate-200 px-5 py-3 text-gray-500 rounded w-full'>
                                 <p className='cursor-pointer hover:text-black text-center'
@@ -63,7 +65,9 @@ const Navbar = () => {
                         </div>
                     }
                 </div>
-                <Link className='relative' to="/cart">
+                <Link onClick={(e) => {e.preventDefault() ;
+                               navigate('/cart');
+                               navigate(0);}} className='relative' to="/cart">
                     <img src={assets.cart_icon} className='w-5 min-w-5 cursor-pointer' />
                     <p className='absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white rounded-full aspect-square text-[8px]'>{cartCount}</p>
                 </Link>

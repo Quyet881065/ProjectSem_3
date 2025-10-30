@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +27,8 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class FlowerService {
+    @Value("${app.media.url-prefix}")
+    private String urlPrefix;
     @Autowired
     private FlowerRepository flowerRepository;
     private final FileStorageService fileStorageService;
@@ -42,6 +45,7 @@ public class FlowerService {
         FlowerEntity savedFlower = flowerRepository.save(flowerEntity);
 
         FlowerResponse response = new FlowerResponse();
+        response.setId(savedFlower.getId());
         response.setFlowerName(savedFlower.getProductName());
         response.setPrice(savedFlower.getPrice());
         response.setUrl(savedFlower.getUrl());
@@ -60,7 +64,7 @@ public class FlowerService {
             // Nếu bạn lưu tên file trong DB, tạo url đầy đủ
             String fileName = flower.getUrl(); // giả sử DB lưu fileName, ví dụ "uuid_hoahong.webp"
             if(fileName != null && !fileName.isEmpty()){
-                String fullUrl = fileStorageService.getUrlPrefix() + fileName;
+                String fullUrl = urlPrefix + fileName;
                 flowerResponse.setUrl(fullUrl);
                 log.info("full url : {}", fullUrl);
             } else {
@@ -74,6 +78,8 @@ public class FlowerService {
             response.add(flowerResponse);
         }
        return ApiResponse.<List<FlowerResponse>>builder()
+               .statusCode(200)
+               .message("success")
                 .results(response)
                 .build();
     }
@@ -88,10 +94,10 @@ public class FlowerService {
         FlowerResponse flowerResponse = new FlowerResponse();
         String fileName = flowerEntity.getUrl();
         if(fileName != null && !fileName.isEmpty()){
-            String fullUrl = fileStorageService.getUrlPrefix() + fileName;
+            String fullUrl = urlPrefix + fileName;
             flowerResponse.setUrl(fullUrl);
         }
-
+        flowerResponse.setId(flowerEntity.getId());
         flowerResponse.setFlowerName(flowerEntity.getProductName());
         flowerResponse.setPrice(flowerEntity.getPrice());
         flowerResponse.setDescription(flowerEntity.getDescription());
@@ -104,7 +110,6 @@ public class FlowerService {
             if(fileName == null || fileName.isEmpty()){
                 throw new RuntimeException("File name is empty!");
             }
-
             // Load file từ storage
             Resource resource = fileStorageService.loadFileAsResource(fileName);
 
@@ -124,6 +129,9 @@ public class FlowerService {
             throw new RuntimeException("Could not download file: " + fileName, e);
         }
     }
+    public void deleteFlower(String id){
+        flowerRepository.deleteById(id);
+    }
 
     public FileResponse uploadFile(MultipartFile file) throws IOException {
         // Store file
@@ -132,5 +140,8 @@ public class FlowerService {
         return FileResponse.builder()
                 .url(fileInfo.getUrl())
                 .build();
+    }
+    public long getTotalFlowers(){
+        return flowerRepository.count();
     }
 }

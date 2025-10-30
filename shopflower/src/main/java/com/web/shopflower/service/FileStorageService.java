@@ -3,6 +3,7 @@ package com.web.shopflower.service;
 import com.web.shopflower.dto.response.FileDataResponse;
 import com.web.shopflower.dto.response.FileInfoResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -17,16 +18,17 @@ import java.util.UUID;
 @Slf4j
 @Service
 public class FileStorageService {
+    @Value("${app.media.url-prefix}")
+    private String urlPrefix;
     // Luôn lưu ở thư mục uploads/flowers trong root của project
     private final Path uploadDir = Paths.get(System.getProperty("user.dir"), "uploads", "flowers");
-    private String urlPrefix = "http://localhost:8080/flowers/media/download/";
-
-    public String getUrlPrefix() {
-        return urlPrefix;
-    }
-
 
     public FileInfoResponse storeFile(MultipartFile file) throws IOException {
+
+        //  Kiểm tra file null hoặc rỗng
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("File is empty or null");
+        }
 
         // Tạo thư mục nếu chưa có
         if (!Files.exists(uploadDir)) {

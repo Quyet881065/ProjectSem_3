@@ -5,6 +5,8 @@ import com.web.shopflower.dto.request.UserRequest;
 import com.web.shopflower.dto.response.UserProFileResponse;
 import com.web.shopflower.dto.response.UserResponse;
 import com.web.shopflower.enums.Role;
+import com.web.shopflower.exception.AppException;
+import com.web.shopflower.exception.ErrorCode;
 import com.web.shopflower.models.RoleEntity;
 import com.web.shopflower.models.UserEntity;
 import com.web.shopflower.repository.RoleRepository;
@@ -29,7 +31,12 @@ public class UserService {
     @Autowired
     private RoleRepository roleRepository;
 
-    public UserResponse createUser(UserRequest request){
+    public ApiResponse<UserResponse> createUser(UserRequest request){
+
+        // Nếu username đã tồn tại → ném lỗi USER_EXISTS
+        if (userRepository.findByUserName(request.getUsername()).isPresent()) {
+            throw new AppException(ErrorCode.USER_EXISTS);
+        }
         UserEntity newUser = new UserEntity();
         newUser.setUserName(request.getUsername());
         newUser.setEmail(request.getEmail());
@@ -42,15 +49,11 @@ public class UserService {
         // Gan role vao user
         newUser.getRoles().add(userRole);
         UserEntity userEntity = userRepository.save(newUser);
-
-        UserResponse userResponse = new UserResponse();
-        userResponse.setEmail(userEntity.getEmail());
-        userResponse.setPassword(userEntity.getPassWord());
-        userResponse.setStatus(userEntity.getStatus());
-        userResponse.setRole(userEntity.getRoles());
-        userResponse.setUsername(userEntity.getUserName());
-        userResponse.setFullname(userEntity.getFullName());
-        return userResponse;
+        return ApiResponse.<UserResponse>builder()
+                .results(toUserResponse(userEntity))
+                .message("Registration successfully ! Please log in continue")
+                .statusCode(201)
+                .build();
     }
 
     public List<UserResponse> getAllUser(){
@@ -78,11 +81,26 @@ public class UserService {
         log.info("userid {}", userid);
 
         UserProFileResponse userProFileResponse = new UserProFileResponse();
+        userProFileResponse.setUserid(userEntity.getId());
         userProFileResponse.setEmail(userEntity.getEmail());
         userProFileResponse.setFullname(userEntity.getFullName());
         userProFileResponse.setUsername(userEntity.getUserName());
         ApiResponse<UserProFileResponse> apiResponse = new ApiResponse<>();
         apiResponse.setResults(userProFileResponse);
         return apiResponse;
+    }
+
+    public long getTotalUser(){
+        return userRepository.count();
+    }
+
+    private UserResponse toUserResponse(UserEntity userEntity){
+        UserResponse userResponse = new UserResponse();
+        userResponse.setFullname(userResponse.getFullname());
+        userResponse.setEmail(userEntity.getEmail());
+        userResponse.setUsername(userEntity.getUserName());
+        userResponse.setRole(userEntity.getRoles());
+        userResponse.setStatus(userResponse.getStatus());
+        return userResponse;
     }
 }

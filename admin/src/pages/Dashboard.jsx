@@ -1,19 +1,26 @@
 
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { BsPersonFill, BsCart, BsBoxSeam } from "react-icons/bs";
-import { backendUrl } from '../App';
+import { getToken } from '../service/localStorageService';
+import { ShopContext } from '../context/ShopContext';
 
 const Dashboard = () => {
+  const {backendurl} = useContext(ShopContext)
   const [totalOrder, setTotalOrder] = useState(0);
   const [totalFlower, setTotalFlower] = useState(0);
   const [totalUser, setTotalUser] = useState(0);
+  console.log(getToken());
 
   const fetchTotalOrder = async () => {
     try {
-      const response = await axios.get(backendUrl + '/api/Orders/TotalOrders')
-      if (response.data.success) {
-        setTotalOrder(response.data.totalOrders);
+      const response = await axios.get(backendurl + '/orders/total',{
+        headers: {
+          Authorization: `Bearer ${getToken()}`
+        }
+      })
+      if (response.data.message === "success") {
+        setTotalOrder(response.data.results);
       }
     } catch (error) {
 
@@ -22,9 +29,9 @@ const Dashboard = () => {
 
   const fetchTotalProduct = async () => {
     try {
-      const response = await axios.get(backendUrl + '/api/Flowers/TotalFlower');
-      if (response.data.success) {
-        setTotalFlower(response.data.totalFlower)
+      const response = await axios.get(backendurl + '/flowers/total');
+      if (response.data.message === "success") {
+        setTotalFlower(response.data.results)
       }
     } catch (error) {
 
@@ -33,9 +40,13 @@ const Dashboard = () => {
 
   const fetchTotalUser = async () => {
     try {
-      const response = await axios.get(backendUrl + '/api/Users/TotalUser');
-      if (response.data.success) {
-        setTotalUser(response.data.total)
+      const response = await axios.get(backendurl + '/users/total', {
+        headers: {
+          Authorization: `Bearer ${getToken()}`
+        }
+      });
+      if (response.data.message === "success") {
+        setTotalUser(response.data.results)
       }
     } catch (error) {
 

@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class UserProFileResponse {
+    private String userid;
     private String username;
     private String  fullname;
     private String email;

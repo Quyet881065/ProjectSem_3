@@ -5,16 +5,22 @@ import axios from 'axios'
 import { useParams } from 'react-router-dom'
 import { FaShoppingCart, FaCog, FaTruck, FaUserCheck } from 'react-icons/fa'
 import Title from '../components/layout/Title'
+import { BsCheckCircle } from "react-icons/bs";
+import { getToken } from '../service/localStorageService'
 
 const ViewOrderDetail = () => {
-    const { orderDetailId } = useParams();
-    const { backendurl } = useContext(ShopContext)
+    const { orderId } = useParams();
+    const { backendurl, navigate } = useContext(ShopContext)
     const [viewOrderData, setViewOrderData] = useState([]);
     const getViewOrder = async () => {
         try {
-            const response = await axios.get(backendurl + `/api/Orders/${orderDetailId}`)
-            if (response.data.success) {
-                setViewOrderData(response.data.data)
+            const response = await axios.get(backendurl + `/orders/${orderId}`, {
+                headers: {
+                    Authorization: `Bearer ${getToken()}`
+                }
+            })
+            if (response.data) {
+                setViewOrderData(response.data)
             }
         } catch (error) {
 
@@ -22,7 +28,7 @@ const ViewOrderDetail = () => {
     }
     useEffect(() => {
         getViewOrder();
-    }, [backendurl, orderDetailId])
+    }, [backendurl])
     console.log(viewOrderData)
 
     const getStatusStyle = status => {
@@ -32,11 +38,12 @@ const ViewOrderDetail = () => {
     return (
         <div>
             <div className='border-t-2'>
-                <div className='text-3xl my-10 font-medium text-center'>
-                    <Title text1={"ORDER"} text2={"INFORMATION"} />
+                <div className='text-7xl flex flex-col justify-center items-center my-10'>
+                    <BsCheckCircle className='text-green-500' />
+                    <h2 className='text-3xl font-medium'>Order Successfully</h2>
                 </div>
                 <p className='font-medium text-xl'>Order status</p>
-                <div className='flex items-center justify-between my-8'>
+                <div className='flex items-center justify-between '>
                     <div className='flex flex-col items-center'>
                         <FaShoppingCart className={`text-3xl ${getStatusStyle(viewOrderData.status)}`} />
                         <p className={`${getStatusStyle(viewOrderData.status)}`}>Order received</p>
@@ -57,37 +64,36 @@ const ViewOrderDetail = () => {
                         <p className={`${viewOrderData.status === "Successful flower delivery" ? "text-red-500" : ""}`}>Successful flower delivery</p>
                     </div>
                 </div>
-                <div className='border border-gray-500 rounded-md  px-2 py-2'>
-                    <div className='text-xl font-medium'>
-                        <Title text1={"Recipient"} text2={"Information"} />
+                <div className='border border-gray-500 rounded-md my-5 px-7 py-2'>
+                    <div className='flex flex-row justify-between text-xl font-medium'>
+                        <h3>DH : {viewOrderData.orderId}</h3>
+                        <p className='text-blue-500 cursor-pointer'
+                            onClick={() => navigate('/orders')} >
+                            Order Management
+                        </p>
                     </div>
-                    <div className='flex flex-row justify-between'>
-                        <p className='font-medium'>Recipient name : {viewOrderData.deliveryInfo?.recipientName}</p>
-                        <p className='font-medium'>Phone : {viewOrderData.deliveryInfo?.recipientPhoneNo}</p>
-                        <p className='font-medium'>Address : {viewOrderData.deliveryAddress}</p>
-                        <p className='font-medium'>Payment method : {viewOrderData.paymentInfo?.paymentMethod}</p>
-                        <p className='font-medium'>Message :  {viewOrderData.occasion?.message}</p>
-                    </div>
-                </div>
-                <div className='border border-gray-500 rounded-md my-5 px-2 py-2'>
-                    <div className='text-xl font-medium'>
-                        <Title text1={"Order"} text2={"Detail"} />
-                    </div>
-                    <div className='grid grid-cols-[1fr_2fr_1fr_1fr_1fr] bg-gray-500 px-1 py-1 text-white rounded-lg'>
-                        <p className='text-center'>Image</p>
-                        <p className='text-center'>Flower Name </p>
-                        <p className='text-center'>Price</p>
-                        <p className='text-center'>Quantity</p>
-                        <p className='text-center'>Total sub</p>
-                    </div>
-                    {viewOrderData.flowers && viewOrderData.flowers.length > 0 ? (
-                        viewOrderData.flowers.map((flower, index) => (
-                            <div key={index} className='grid grid-cols-[1fr_2fr_1fr_1fr_1fr] items-center'>
-                                <img className='w-16 rounded-md mt-3 ml-10' src={flower.image} alt='' />
-                                <p className='text-center'>{flower.flowerName}</p>
-                                <p className='text-center'>{flower.price}</p>
-                                <p className='text-center'>{flower.quantity}</p>
-                                <p className='text-center'>{flower.price * flower.quantity}</p>
+                    <hr className='my-3' />
+                    {viewOrderData && (
+                        <div>
+                            <p><strong>Full name : </strong>{viewOrderData.fullName}</p>
+                            <p><strong>Phone : </strong>{viewOrderData.phone}</p>
+                            <p><strong>Address : </strong>{viewOrderData.shippingAddress}</p>
+                        </div>
+                    )}
+                    <hr className='my-3' />
+                    {viewOrderData.items ? (
+                        viewOrderData.items.map((item, index) => (
+                            <div className='flex justify-between items-center' key={index}>
+                                <div className='flex gap-3 items-center'>
+                                    <img src={item.url} alt='' className='w-[60px]' />
+                                    <div>
+                                        <p>{item.flowerName}</p>
+                                        <p>{item.quantity} x <strong className='text-red-500'>{item.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</strong></p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <strong className='text-red-500'>{viewOrderData.totalAmount.toLocaleString('vi-VN', {style:'currency', currency:'VND'})}</strong>
+                                </div>
                             </div>
                         ))
                     ) : (
@@ -96,10 +102,11 @@ const ViewOrderDetail = () => {
 
                     <hr className='my-5' />
                     <div className='flex justify-end'>
-                        <p className='text-red-500 text-lg font-medium'>Total : $ {viewOrderData.total}</p>
+                        <p className='text-xl font-medium'>Total Amount : <strong className='text-red-500'>{viewOrderData.totalAmount?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</strong></p>
                     </div>
                 </div>
             </div>
+            <button onClick={() => navigate('/')} className='border w-full py-2 rounded-xl bg-red-500 text-white text-xl'>Continue shopping</button>
         </div>
     )
 }

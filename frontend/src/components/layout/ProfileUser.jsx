@@ -1,30 +1,30 @@
 import { useContext, useEffect, useState } from "react"
 import { ShopContext } from "../../context/ShopContext";
-import { getMyInfo } from "../../service/userService";
+//import { getMyInfo } from "../../service/userService";
 import { isAuthenticated } from "../../service/authenticationService";
 
 export default function ProfileUser() {
-    const [userDetails, setUserDetails] = useState({});
-    const { navigate } = useContext(ShopContext);
+   // const [userDetails, setUserDetails] = useState({});
+    const { navigate, userProfile } = useContext(ShopContext);
 
-    const getUserDetails = async () => {
-        const response = await getMyInfo();
-        const data = response.data;
-        setUserDetails(data.results);
-        console.log("User Details:", data);
-    }
+    // const getUserDetails = async () => {
+    //     const response = await getMyInfo();
+    //     const data = response.data;
+    //     setUserDetails(data.results);
+    //     console.log("User Details:", data);
+    // }
 
     useEffect(() => {
         if (!isAuthenticated) {
             navigate("/login");
         } else {
-            getUserDetails();
+            //getUserDetails();
         }
     }, [navigate])
 
     return (
         <div>
-            {userDetails && (
+            {userProfile && (
                 <div className="flex flex-col justify-center items-center my-20 ">
                     <div className="mb-10">
                         <h3 className="font-bold text-3xl">User Profile</h3>
@@ -32,12 +32,12 @@ export default function ProfileUser() {
                     <div className="border p-20 flex flex-col items-center gap-5 shadow-lg rounded-lg">
                         <img
                             className="w-[120px] rounded-full"
-                            src={userDetails.avatar ? userDetails.avatar : `https://ui-avatars.com/api/?name=${userDetails.username}&background=random`}
+                            src={userProfile.avatar ? userProfile.avatar : `https://ui-avatars.com/api/?name=${userProfile.username}&background=random`}
                             alt="User Avatar"
                         />
-                        <p className="text-xl font-medium">User name : {userDetails.username}</p>
-                        <p className="text-xl font-medium">Full name : {userDetails.fullname}</p>
-                        <p className="text-xl font-medium">Email : {userDetails.email}</p>
+                        <p className="text-xl font-medium">User name : {userProfile.username}</p>
+                        <p className="text-xl font-medium">Full name : {userProfile.fullname}</p>
+                        <p className="text-xl font-medium">Email : {userProfile.email}</p>
                     </div>
                 </div>
             )}

@@ -22,12 +22,21 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    UserResponse createUser(@RequestBody UserRequest request){
+    ApiResponse<UserResponse> createUser(@RequestBody UserRequest request){
        return  userService.createUser(request);
     }
 
     @GetMapping("/my-profile")
     ApiResponse<UserProFileResponse> getMyProfile(){
         return userService.getMyProfile();
+    }
+
+    @GetMapping("/total")
+    ApiResponse<Long> getTotalUser(){
+        long total = userService.getTotalUser();
+        return ApiResponse.<Long>builder()
+                .results(total)
+                .message("success")
+                .build();
     }
 }

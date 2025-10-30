@@ -22,11 +22,12 @@ import delivery from './icon_delivery.png'
 import guarantee_smile from './guarantee_smile.png'
 import logo from './logo.png'
 import flower_logo from './flower_logo.png'
+import logovnpay from './LogoVNPay.webp'
 
 export const assets = {
      bin_icon, cart_icon, cross_icon, dropdown_icon, exchange_icon, menu_icon, 
     profile_icon, quanlity_icon, search_icon, support_img, lan_ho_diep,
     delivery, happycard, imageabout, icon_postcard, icon_fresh_warranty,
-    add_icon, order_icon, upload_area, support, vat, guarantee_smile, logo, flower_logo
+    add_icon, order_icon, upload_area, support, vat, guarantee_smile, logo, flower_logo, logovnpay
 }
 

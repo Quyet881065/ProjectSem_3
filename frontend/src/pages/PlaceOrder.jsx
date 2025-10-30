@@ -4,9 +4,9 @@ import axios from 'axios'
 import Title from '../components/layout/Title'
 import CartTotal from '../components/layout/CartTotal'
 import { ShopContext } from '../context/ShopContext'
+import { getToken } from '../service/localStorageService'
 
 const PlaceOrder = () => {
-
     // State for form fields
     const [fullName, setFullName] = useState('');
     const [address, setAddress] = useState('');
@@ -15,10 +15,10 @@ const PlaceOrder = () => {
     const [paymentMethod, setPaymentMethod] = useState('');
     const [occasionId, setOccasionId] = useState('');
     const [occasions, setOccasions] = useState([]);
-    const { backendurl, getCartAmount, navigate, clearCart, cartData } = useContext(ShopContext);
+    const { backendurl, navigate, clearCart, cart } = useContext(ShopContext);
     const customerId = localStorage.getItem('customerId');
 
-    console.log(cartData)
+    console.log(cart)
     // Get message
     useEffect(() => {
         const fetchOccasions = async () => {
@@ -31,105 +31,41 @@ const PlaceOrder = () => {
         }
         fetchOccasions()
     }, [backendurl])
-    console.log(getCartAmount())
 
-    // Ham submit order details
-    const handleSubmitOrderDetails = async (orderId) => {
-        const orderDetails = cartData.map(item => ({
-            orderId: orderId,
-            flowerId: item.flower.flowerId,
-            quantity: item.quantity,
-            price: item.flower.price
-        }))
-        try {
-            const response = await axios.post(backendurl + '/api/OrderDetails', orderDetails)
-            if (response.data.success) {
-                console.log('Order details successfully submitted:', response.data);
-            } else {
-                console.error('Failed to submit order details:', response.data);
-            }
-        } catch (error) {
-            console.error('Error submitting order details:', error);
-        }
-    }
-
-    const handleStripePayment = async (orderId) => {
-        try {
-
-            // Create the payment session on the backend
-            const response = await axios.post(backendurl + '/api/Payment/create-checkout-session', {
-                orderId: orderId,
-                amount: getCartAmount(), // Assuming amount is in USD
-            });
-
-            // Redirect the user to the Stripe checkout page
-
-            const { url } = response.data;
-            if (url) {
-                window.location.href = url;
-            }
-            console.log(url)
-            await clearCart();
-        } catch (error) {
-            console.error('Error with Stripe payment:', error);
-        }
-    };
 
     // Submit form
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!fullName || !address || !phone  || !paymentMethod) {
+        if (!fullName || !address || !phone) {
             alert('Please fill in all required fields.');
             return;
         }
-
-        // Create order payload
+        //Create order payload
         const orderPayload = {
-            customerId: parseInt(customerId),
-            deliveryAddress: address,
-            total: getCartAmount(),
-            status: 'Order received',
-            occasionId: occasionId || null,
+            userId: cart.userId,
+            shippingAddress: address,
+            fullName: fullName,
+            phone: phone,
+            items: cart.items.map(item => ({
+                flowerId: item.flowerId,
+                quantity: item.quantity,
+                price: item.price
+            }))
         };
-
+        console.log('Order Payload:', orderPayload);
         try {
             // Create order
-            const orderResponse = await axios.post(backendurl + '/api/Orders', orderPayload);
-            const orderId = orderResponse.data.orderId;
-
-            localStorage.setItem('orderId', orderId);
-
-            await handleSubmitOrderDetails(orderId);
-
-            // Create delivery info payload
-            const deliveryPayload = {
-                orderid: orderId,
-                recipientName: fullName,
-                recipientAddress: address,
-                recipientPhoneNo: phone,
-                //deliveryDate: deliveryDate
-            };
-
-            await axios.post(backendurl + '/api/DeliveryInfoes', deliveryPayload);
-
-            // Create payment payload
-            if (paymentMethod === 'card') {
-                await handleStripePayment(orderId);
-            } else {
-                const paymentPayload = {
-                    orderid: orderId,
-                    paymentMethod: paymentMethod,
-                    paymentAmount: getCartAmount(),
-                    paymentStatus: 'Cash On Delivery',
-                };
-                await axios.post(backendurl + '/api/Payments', paymentPayload);
-                navigate(`/orders/${orderId}`);
-                clearCart();
-            }
+            const orderResponse = await axios.post(backendurl + '/orders/create', orderPayload, {
+                headers: {
+                    Authorization: `Bearer ${getToken()}`
+                }
+            });
+            console.log("Order response:", orderResponse.data);
+            navigate("/orders/" + orderResponse.data.orderId);
+            clearCart();
         } catch (error) {
-            console.error('Error placing order', error);
-            alert('Failed to place order');
+            console.error('Error creating order:', error);
         }
     };
 
@@ -163,7 +99,7 @@ const PlaceOrder = () => {
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)} className='border border-gray-200 rounded py-1.5' type='text' />
                 </div>
-                <div className='flex flex-col gap-1'>
+                {/* <div className='flex flex-col gap-1'>
                     <label>Select Occasion</label>
                     <select className='border border-gray-200 rounded py-1.5' value={occasionId} onChange={e => setOccasionId(e.target.value)}>
                         <option>Select Occasion</option>
@@ -171,7 +107,7 @@ const PlaceOrder = () => {
                             <option key={occasion.occasionid} value={occasion.occasionid}>{occasion.message1}</option>
                         ))}
                     </select>
-                </div>
+                </div> */}
             </div>
 
             {/* Right Side */}
@@ -179,7 +115,7 @@ const PlaceOrder = () => {
                 <div className='mt-8 min-w-80'>
                     <CartTotal />
                 </div>
-                <div>
+                {/* <div>
                     <Title text1={'PAYMENT'} text2={'METHOD'} />
                     <div className={`flex items-center gap-3 border p-2 px-4 cursor-pointer ${paymentMethod === 'card' ? 'border-black' : ''}`}
                         onClick={() => setPaymentMethod('card')}>
@@ -193,7 +129,7 @@ const PlaceOrder = () => {
                         <p className={`min-w-[14px] h-[14px] border rounded-full ${paymentMethod === 'Payment Cash' ? 'bg-black' : ''}`}></p>
                         <p className='text-gray-500 text-sm font-medium mx-4'>Cash on Delivery</p>
                     </div>
-                </div>
+                </div> */}
                 <div className='w-full text-end mt-8'>
                     <button type='submit' className='bg-blue-500 rounded-md text-gray-50 px-10 py-3 text-sm'>PLACE ORDER</button>
                 </div>

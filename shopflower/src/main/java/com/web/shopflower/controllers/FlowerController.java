@@ -38,6 +38,7 @@ public class FlowerController {
     FlowerResponse getFlower(@PathVariable String id){
         return flowerService.getFlower(id);
     }
+    
 
     // API upload ảnh
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -58,5 +59,17 @@ public class FlowerController {
     @PostMapping("/create")
     public FlowerResponse createFlower(@RequestBody FlowerRequest request) {
         return flowerService.createFlower(request);
+    }
+    @GetMapping("/total")
+    ApiResponse<Long> getTotalFlowers(){
+        long total = flowerService.getTotalFlowers();
+        return ApiResponse.<Long>builder()
+                .results(total)
+                .message("success")
+                .build();
+    }
+    @DeleteMapping("/{id}")
+    void deleteFlower(@PathVariable String id){
+        flowerService.deleteFlower(id);
     }
 }

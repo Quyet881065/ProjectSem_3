@@ -1,14 +1,15 @@
 
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { backendUrl } from '../App'
+import React, { useContext, useEffect, useState } from 'react'
 import { FaEye, FaEdit } from "react-icons/fa";
+import { ShopContext } from '../context/ShopContext';
 
 const User = () => {
+  const {backendurl} = useContext(ShopContext)
   const [userData, setUserData] = useState([])
   const fetchUser = async () => {
     try {
-      const response = await axios.get(backendUrl + '/api/Users');
+      const response = await axios.get(backendurl + '/api/Users');
       setUserData(response.data);
     } catch (error) {
 

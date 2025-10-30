@@ -20,6 +20,7 @@ export const API = {
   CREATE_CONVERSATION: "/chat/conversations/create",
    CREATE_MESSAGE: "/chat/messages/create",
   GET_CONVERSATION_MESSAGES: "/chat/messages",
+  REFRESH : "/auth/refresh"
 }
 
 // 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

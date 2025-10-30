@@ -15,12 +15,12 @@ const BestSeller = () => {
     },[flowers])
     
     return (
-        <motion.div
-        className='my-10'
-        initial={{ opacity: 0, y: 250 }}  // Trạng thái ban đầu (ẩn)
-        whileInView={{ opacity: 1, y: 10 }}  // Khi cuộn vào vùng nhìn thấy, hiện lên
-        transition={{ duration: 1.5 }}  // Thời gian chuyển động
-      >
+    //     <motion.div
+    //     className='my-10'
+    //     initial={{ opacity: 0, y: 250 }}  // Trạng thái ban đầu (ẩn)
+    //     whileInView={{ opacity: 1, y: 10 }}  // Khi cuộn vào vùng nhìn thấy, hiện lên
+    //     transition={{ duration: 1.5 }}  // Thời gian chuyển động
+    //   >
         <div className='my-10'>
             <div className='text-center text-3xl py-8'>
                 <Title text1={'BEST'} text2={'SELLERS'} />
@@ -31,7 +31,7 @@ const BestSeller = () => {
                ))}
             </div>
         </div>
-        </motion.div>
+       // </motion.div>
     )
 }
 

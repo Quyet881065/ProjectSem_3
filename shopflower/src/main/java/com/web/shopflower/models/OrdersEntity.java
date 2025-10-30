@@ -17,7 +17,13 @@ public class OrdersEntity {
     private String id;
 
     @Enumerated(EnumType.STRING)
-    private OrderStatus status = OrderStatus.PENDING;
+    private OrderStatus status ;
+
+    @Column(name = "full_name")
+    private String fullName;
+
+    @Column(name = "phone")
+    private String phone;
 
     @Column(name = "total_amount")
     private double totalAmount;

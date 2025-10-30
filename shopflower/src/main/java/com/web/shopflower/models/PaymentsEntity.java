@@ -17,12 +17,14 @@ public class PaymentsEntity {
     private String id;
 
     private Double amount;
+
+    @Enumerated(EnumType.STRING)
     private PaymentMethod method;
 
     @Enumerated(EnumType.STRING)
-    private PaymentStatus status = PaymentStatus.PENDING;
+    private PaymentStatus status;
 
-    private String transactionId;
+   // private String transactionId;
     private LocalDateTime paidAt;
 
     // quan he voi orders

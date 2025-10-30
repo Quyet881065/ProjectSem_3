@@ -9,13 +9,13 @@ export const register = async(formData) => {
 
 console.log("get token in userService:", getToken());
 
-export const getMyInfo = async()=>{
-    return await httpClient.get(API.MY_INFO,{
-        headers: {
-            Authorization: `Bearer ${getToken()}`
-        }
-    })
-}
+// export const getMyInfo = async()=>{
+//     return await httpClient.get(API.MY_INFO,{
+//         headers: {
+//             Authorization: `Bearer ${getToken()}`
+//         }
+//     })
+// }
 
 export const updateProfile = async (profileData) => {
   return await httpClient.put(API.UPDATE_PROFILE, profileData, {

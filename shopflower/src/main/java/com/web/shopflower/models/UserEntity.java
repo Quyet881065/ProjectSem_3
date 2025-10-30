@@ -2,13 +2,16 @@ package com.web.shopflower.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
-@Data
+@Setter
+@Getter
 public class UserEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Id
@@ -41,4 +44,7 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private List<RoleEntity> roles = new ArrayList<>();
+
+    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private CartEntity cartEntity;
 }

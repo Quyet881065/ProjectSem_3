@@ -1,11 +1,12 @@
 
 import axios from 'axios';
-import React, { useState } from 'react'
-import { backendUrl } from '../App';
+import React, { useContext, useState } from 'react'
 import { toast } from 'react-toastify';
 import { assets } from '../assets/assets.';
+import { ShopContext } from '../context/ShopContext';
 
 const UploadFlower = ({ flowerId, onClose, fetchList}) => {
+    const {backendurl} = useContext(ShopContext)
     const [nameFlower, setNameFlower] = useState('');
     const [price, setPrice] = useState('');
     const [category, setCategory] = useState('');
@@ -21,7 +22,7 @@ const UploadFlower = ({ flowerId, onClose, fetchList}) => {
             formData.append('category', category);
             formData.append('bestseller', bestseller);
             formData.append('imageFile', image);
-            const response = await axios.put(backendUrl + `/api/Flowers/${flowerId}`, formData);
+            const response = await axios.put(backendurl + `/api/Flowers/${flowerId}`, formData);
             if (response.data.success) {
                 toast.success("Flower uploaded successfully!")
                 onClose(); // Đóng component UploadFlower

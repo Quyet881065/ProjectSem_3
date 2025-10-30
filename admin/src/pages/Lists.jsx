@@ -1,11 +1,12 @@
 
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
-import { backendUrl } from '../App';
+import React, { useContext, useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
 import UploadFlower from './UploadFlower';
 import { assets } from '../assets/assets.';
+import { ShopContext } from '../context/ShopContext';
 const Lists = () => {
+  const {backendurl} = useContext(ShopContext)
   const [list, setList] = useState([]);
   const [showUpload, setShowUpload] = useState(false);
   const [selectedFlowerId, setSelectedFlowerId] = useState(null);
@@ -15,11 +16,12 @@ const Lists = () => {
 
   const fetchList = async e => {
     try {
-      const response = await axios.get(backendUrl + '/api/Flowers');
-      if (response.data.success) {
-        setList(response.data.flowers);
+      const response = await axios.get(backendurl + '/flowers');
+      const data = response.data;
+      if (data.message === "success") {
+        setList(data.results);
       } else {
-        toast.error(response.data.message)
+        toast.error(data.message)
       }
     } catch (error) {
       console.log(error)
@@ -29,7 +31,7 @@ const Lists = () => {
 
   const removeFlower = async (id) => {
     try {
-      const response = await axios.delete(backendUrl + `/api/Flowers/${id}`)
+      const response = await axios.delete(backendurl + `/flowers/${id}`)
       if (response.data.success) {
         toast.success(response.data.message);
         await fetchList();
@@ -42,11 +44,10 @@ const Lists = () => {
     }
   }
 
-  const filterFlower = async (flowerName, sortCategory, sortOption) => {
+  const filterFlower = async (flowerName, sortOption) => {
     try {
-      const response = await axios.get(backendUrl + '/api/FlowerFilter', {
+      const response = await axios.get(backendurl + '/api/FlowerFilter', {
         params: {
-          category: sortCategory,
           flowerName: flowerName,
           sort: sortOption
         }
@@ -72,8 +73,8 @@ const Lists = () => {
   }, [])
 
   useEffect(() => {
-    filterFlower(search, sortCategory, sortOption)
-  }, [search, sortCategory, sortOption])
+    filterFlower(search, sortOption)
+  }, [search, sortOption])
 
   return (
     <div>
@@ -85,13 +86,13 @@ const Lists = () => {
               <input onChange={(e) => setSearch(e.target.value)} value={search} type='text' className='flex-1 outline-none' placeholder='Search' />
               <img src={assets.search_icon} alt='' className='w-5 cursor-pointer' />
             </div>
-            <select onChange={e => setSortCategory(e.target.value)} value={sortCategory}
+            {/* <select onChange={e => setSortCategory(e.target.value)} value={sortCategory}
               className='border px-2 rounded-md'>
               <option value=''>Select Category</option>
               <option value='openingflower'>Opening Flower</option>
               <option value='weddingflower'>Wedding Flower</option>
               <option value='birthdayflower'>Bidthday Flower</option>
-            </select>
+            </select> */}
             <select onChange={e => setSortOption(e.target.value)} value={sortOption} className='border rounded-md text-sm px-2 py-2'>
               <option value="relevant">Sort by: Relevant</option>
               <option value="lowtohigh">Sort by: Low to High</option>
@@ -99,24 +100,22 @@ const Lists = () => {
             </select>
           </div>
           <div className='flex flex-col gap-2'>
-            <div className='hidden md:grid grid-cols-[0.5fr_1fr_2fr_1fr_1fr_1fr] border border-gray-200 items-center px-2 py-2 text-sm'>
+            <div className='hidden md:grid grid-cols-[0.5fr_1fr_2fr_1fr_1fr] border border-gray-200 items-center px-2 py-2 text-sm'>
               <b>STT</b>
               <b>Image</b>
               <b>Name</b>
-              <b>Category</b>
               <b>Price</b>
               <b className='text-center'>Active</b>
             </div>
             {list.map((item, index) => (
-              <div key={index} className='grid grid-cols-[1fr_3fr_1fr] sm:grid-cols-[0.5fr_1fr_2fr_1fr_1fr_1fr] items-center border border-gray-300 text-sm'>
+              <div key={index} className='grid grid-cols-[1fr_3fr_1fr] sm:grid-cols-[0.5fr_1fr_2fr_1fr_1fr] items-center border border-gray-300 text-sm'>
                 <p className='pl-3'>{index + 1}</p>
-                <img className='w-12' src={item.image} alt='' />
+                <img className='w-13' src={item.url} alt='' />
                 <p>{item.flowerName}</p>
-                <p>{item.category}</p>
-                <p>${item.price}</p>
-                <div className='flex flex-col gap-1'>
-                  <button onClick={() => handleUploadClick(item.flowerId)} className='border border-gray-300 w-35 rounded-md py-1.5 bg-blue-500 text-white cursor-pointer'>Upload Flower</button>
-                  <button onClick={() => removeFlower(item.flowerId)} className='border border-gray-300 w-35 rounded-md py-1.5 bg-red-500 text-white cursor-pointer'>Delete Flower</button>
+                <p>{item.price.toLocaleString('vi-VN', {style:'currency', currency:'VND'})}</p>
+                <div className='flex flex-row gap-3'>
+                  <button onClick={() => handleUploadClick(item.id)} className='border border-gray-300 p-1 rounded-md bg-blue-500 text-white cursor-pointer'>Upload Flower</button>
+                  <button onClick={() => removeFlower(item.id)} className='border border-gray-300 p-1 rounded-md bg-red-500 text-white cursor-pointer'>Delete Flower</button>
                 </div>
               </div>
             ))}

@@ -1,16 +1,17 @@
 
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
-import { backendUrl } from '../App';
+import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { ShopContext } from '../context/ShopContext';
 
 const Orders = () => {
+  const {backendurl} = useContext(ShopContext)
   const [ordersData, setOrdersData] = useState([]);
   const [statusMap, setStatusMap] = useState({});
   const navigate = useNavigate();
   const fetchOrdersData = async () => {
     try {
-      const response = await axios.get(backendUrl + '/api/Orders');
+      const response = await axios.get(backendurl + '/api/Orders');
       if (response.data.success) {
         setOrdersData(response.data.data);
       } else {
@@ -27,7 +28,7 @@ const Orders = () => {
 
   const deleteOrder = async(orderId)=>{
     try {
-      const response = await axios.delete(backendUrl + `/api/Orders/${orderId}`)
+      const response = await axios.delete(backendurl + `/api/Orders/${orderId}`)
       if(response.data.success){
         fetchOrdersData()
       }
@@ -47,7 +48,7 @@ const Orders = () => {
       return;
     }
     try {
-      const response = await axios.put(backendUrl + `/api/Orders/${orderId}/status`, { status: newStatus })
+      const response = await axios.put(backendurl + `/api/Orders/${orderId}/status`, { status: newStatus })
       if (response.data.success) {
         fetchOrdersData();
         // alert('Status updated successfully!')

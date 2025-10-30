@@ -1,15 +1,16 @@
 package com.web.shopflower.enums;
 
 public enum PaymentMethod {
-    CASH("Thanh toán tiền mặt"),
-    BANK_TRANSFER("Chuyển khoản");
+    COD(),
+    BANK_TRANSFER(),
+    VNPAY();
 
-    PaymentMethod(String method){
-        this.method = method;
-    }
-    private String method;
-
-    public String getMethod(){
-        return method;
-    }
+//    PaymentMethod(String method){
+//        this.method = method;
+//    }
+//    private String method;
+//
+//    public String getMethod(){
+//        return method;
+//    }
 }

@@ -23,7 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS = {
-            "/flowers/media/download/**"
+            "/flowers/**" , "/flowers"
     };
     private final CustomJwtDecoder customJwtDecoder;
 
@@ -34,8 +34,9 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth ->
                                 auth.requestMatchers(HttpMethod.POST, "/users/register",
-                                        "/auth/login" ).permitAll()
+                                        "/auth/login" , "/auth/refresh").permitAll()
                                         .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
+                                        .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
                                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
@@ -47,7 +48,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173")); // cho frontend React
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5000")); // cho frontend React
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true); // nếu có gửi cookie/token

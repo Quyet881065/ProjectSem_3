@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { assets } from '../assets/assets.'
-import { backendUrl } from '../App';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { ShopContext } from '../context/ShopContext';
 const Add = () => {
+  const {backendurl} = useContext(ShopContext)
   const [flowerData, setFlowerData] = useState({
     name: '',
     description: '',
@@ -34,7 +35,7 @@ const Add = () => {
       fromData.append('imageFile', flowerData.image);
       fromData.append('productsInclude', flowerData.productsInclude);
 
-      const response = await axios.post(backendUrl + '/api/Flowers', fromData)
+      const response = await axios.post(backendurl + '/api/Flowers', fromData)
       if (response.data.success) {
         setFlowerData({
           name: '',

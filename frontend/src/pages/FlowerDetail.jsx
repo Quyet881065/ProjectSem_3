@@ -14,7 +14,7 @@ const FlowerDetail = () => {
   const currency = '$';
   const [flowerData, setFlowerData] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const { addToCartContext, getCartCount } = useContext(ShopContext)
+  const { addToCart, getCartCount, userId } = useContext(ShopContext)
 
   useEffect(() => {
     // Find the flower based on the URL parameter
@@ -41,39 +41,6 @@ const FlowerDetail = () => {
     return <div>Loading flower details...</div>;
   }
 
-  const addToCart = async () => {
-    const userId = localStorage.getItem('userId');
-    if (!userId || !token) {
-      toast.error('Please log in to add items to your cart.');
-      return;
-    }
-
-    try {
-      const cartItem = {
-        UserId: userId,
-        FlowerId: flowerData.flowerId,
-        Quantity: quantity,
-      };
-
-      const response = await axios.post(`${backendurl}/api/Carts`, cartItem, {
-        headers: { token },
-      });
-
-      if (response.data.success) {
-        toast.success('Added to cart successfully!');
-        addToCartContext({
-          flower: flowerData,
-          quantity: quantity,
-        });
-        getCartCount();
-      } else {
-        toast.error('Failed to add to cart.');
-      }
-    } catch (error) {
-      console.error('Error adding item to cart:', error);
-      toast.error('Error occurred while adding item to cart.');
-    }
-  };
 
   // Update quantity handler
   const handleQuantityChange = (e) => {
@@ -107,7 +74,7 @@ const FlowerDetail = () => {
                 onChange={handleQuantityChange}
               />
             </div>
-            <button onClick={addToCart} className='bg-blue-500 text-white px-8 py-3 text-base font-medium active:bg-gray-700 mt-5 max-w-60 rounded-md'>
+            <button onClick={() => addToCart(flowerData.id, quantity)} className='bg-blue-500 text-white px-8 py-3 text-base font-medium active:bg-gray-700 mt-5 max-w-60 rounded-md'>
               ADD TO CART
             </button>
           </div>

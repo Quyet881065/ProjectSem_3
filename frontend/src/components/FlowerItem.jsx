@@ -12,7 +12,7 @@ const FlowerItem = ({ id, imageUrl, name, price }) => {
       try {
         const token = getToken();
         const response = await axios.get(imageUrl, {
-          headers: { Authorization: `Bearer ${token}` },
+         // headers: { Authorization: `Bearer ${token}` },
           responseType: "blob",
         });
         setImgSrc(URL.createObjectURL(response.data));
@@ -21,7 +21,7 @@ const FlowerItem = ({ id, imageUrl, name, price }) => {
       }
     };
     loadImage();
-  }, [imageUrl]);
+  }, []);
   return (
     <div className='border pt-2'>
       <Link className='text-gray-700 cursor-pointer' to={`/flower/${id}`}>

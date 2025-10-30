@@ -4,20 +4,20 @@ import { assets } from '../../assets/assets'
 
 const Footer = () => {
     return (
-        <div className='bg-gray-200'>
-            <div className='flex flex-col sm:grid grid-cols-[1fr_1fr_1fr_1fr_1fr] gap-14 my-5 text-sm'>
+        <div className='bg-gray-300'>
+            <div className='flex flex-col sm:grid grid-cols-[1fr_1fr_1fr_1fr_1fr] gap-14 my-5 text-sm py-10 '>
                 <div>
-                    <img className='mb-5 w-20' src={assets.logo} alt='' />
-                    <p className='w-full md:w-2/3 text-gray-600'>Flower</p>
+                    <img className='mb-5 w-20 rounded-lg m-5' src={assets.logo} alt='' />
+                    <p className='w-full md:w-2/3 text-gray-600 m-5 text-lg font-semibold'>Flower Bouquet</p>
                 </div>
-                <div>
+                <div className='mt-5'>
                     <p className='text-xl font-medium mb-5'>Introduction to flowers</p>
                     <ul className='flex flex-col gap-1 text-gray-600'>
                         <li>Flower meaning</li>
                         <li>How to care for flowers</li>
                     </ul>
                 </div>
-                <div>
+                <div className='mt-5'>
                     <p className='text-xl font-medium mb-5'>Customer care</p>
                     <ul className='flex flex-col gap-1 text-gray-600'>
                         <li>Information security policy</li>
@@ -26,7 +26,7 @@ const Footer = () => {
                         <li>Delivery fee</li>
                     </ul>
                 </div>
-                <div>
+                <div className='mt-5'>
                     <p className='text-xl font-medium mb-5'>SHOP FLOWER</p>
                     <ul className='flex flex-col gap-1 text-gray-600'>
                         <li>Introduce</li>
@@ -35,7 +35,7 @@ const Footer = () => {
                         <li>Contact</li>
                     </ul>
                 </div>
-                <div>
+                <div className='mt-5'>
                     <p className='text-xl font-medium mb-5'>GET IN TOUCH</p>
                     <ul className='flex flex-col gap-1 text-gray-600'>
                         <li>Phone : 0912345678</li>
@@ -43,10 +43,6 @@ const Footer = () => {
                         <li>Address : My Dinh Ha Noi</li>
                     </ul>
                 </div>
-            </div>
-            <div>
-                <hr />
-                <p className='py-5 text-center text-sm'>Copyright 2024@ forever</p>
             </div>
         </div>
     )
