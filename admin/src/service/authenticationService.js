@@ -2,11 +2,12 @@ import { API } from "../configuration/configuration"
 import { httpClient } from "../configuration/httpClient"
 import { setExpirationTime, setToken } from "./localStorageService";
 
-export const logIn = async (username, password) => {
+export const logIn = async (email, password) => {
     const response = await httpClient.post(API.LOGIN, {
-        username : username,
+        email : email,
         password : password
     })
+    console.log(response)
     const data = response.data;
     const token = data.results.token;
     const expirationIOS = data.results.expiryTime;

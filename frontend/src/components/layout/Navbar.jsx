@@ -4,7 +4,7 @@ import { assets } from '../../assets/assets.js'
 import { ShopContext } from '../../context/ShopContext.jsx'
 import { removeToken } from '../../service/localStorageService.js'
 import { getToken } from '../../service/localStorageService.js'
-import { isAuthenticated } from '../../service/authenticationService.js'
+import { isAuthenticated } from '../../features/auth/service/authenticationService.js'
 
 const Navbar = () => {
     const [visible, setVisible] = useState(false);

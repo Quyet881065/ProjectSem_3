@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { ShopContext } from "../../context/ShopContext";
 //import { getMyInfo } from "../../service/userService";
-import { isAuthenticated } from "../../service/authenticationService";
+import { isAuthenticated } from "../../features/auth/service/authenticationService.js";
 
 export default function ProfileUser() {
    // const [userDetails, setUserDetails] = useState({});
@@ -21,6 +21,7 @@ export default function ProfileUser() {
             //getUserDetails();
         }
     }, [navigate])
+    console.log("User Profile in Component:", userProfile);
 
     return (
         <div>
@@ -35,8 +36,8 @@ export default function ProfileUser() {
                             src={userProfile.avatar ? userProfile.avatar : `https://ui-avatars.com/api/?name=${userProfile.username}&background=random`}
                             alt="User Avatar"
                         />
-                        <p className="text-xl font-medium">User name : {userProfile.username}</p>
-                        <p className="text-xl font-medium">Full name : {userProfile.fullname}</p>
+                        <p className="text-xl font-medium">User name : {userProfile.userName}</p>
+                        <p className="text-xl font-medium">Full name : {userProfile.fullName}</p>
                         <p className="text-xl font-medium">Email : {userProfile.email}</p>
                     </div>
                 </div>

@@ -9,7 +9,7 @@ const Login = () => {
   const {backendurl, navigate} = useContext(ShopContext);
   const [message, setMessage] = useState({success:'', error:''})
   const [formData, setFormData] = useState({
-    username : '',
+    email : '',
     password : ''
   })
 
@@ -25,7 +25,7 @@ const Login = () => {
    const onSubmitHandle = async (e) => {
     e.preventDefault();
     try {
-      const data = await logIn(formData.username, formData.password);
+      const data = await logIn(formData.email, formData.password);
       console.log("Login response:", data);
 
       if (data.statusCode === 200 && data.results.role === "ROLE_ADMIN") {
@@ -78,8 +78,8 @@ const Login = () => {
         <h1 className='text-2xl font-bold mb-5'>Admin Panel</h1>
         <form onSubmit={onSubmitHandle}>
           <div className='mb-3 min-w-72'>
-            <p className='text-sm font-medium text-gray-700 mb-2'>User name</p>
-            <input onChange={handldeChange} name='username' value={formData.username} className='border border-gray-300 rounded-md w-full outline-none px-3 py-2' type='text' placeholder='User name' />
+            <p className='text-sm font-medium text-gray-700 mb-2'>Email</p>
+            <input onChange={handldeChange} name='email' value={formData.email} className='border border-gray-300 rounded-md w-full outline-none px-3 py-2' type='text' placeholder='Email' />
           </div>
           <div className='mb-3 min-w-72'>
             <p className='text-sm font-medium text-gray-700 mb-2'>Password</p>

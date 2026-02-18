@@ -16,6 +16,13 @@ export const removeToken =() => {
 
 }
 
+export const setUserId = (userId) => {
+    localStorage.setItem("userId", userId);
+}
+export const getUserId = () => {
+    return localStorage.getItem("userId");
+}
+
 export const setExpirationTime = (expiration) => {
     localStorage.setItem("expirationTime", expiration);
 }

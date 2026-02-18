@@ -11,6 +11,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import ViewOrderDetail from './pages/ViewOrderDetail';
 import Dashboard from './pages/Dashboard';
 import User from './pages/User';
+import ChatDashBoard from './features/chat/page/ChatDashBoard';
 import { getToken } from './service/localStorageService';
 
 export const currency = '$'
@@ -49,6 +50,7 @@ function App() {
                 <Route path="/orders" element={<Orders />} />
                 <Route path="/orders/:orderId" element={<ViewOrderDetail />} />
                 <Route path="/users" element={<User />} />
+                <Route path='/chats' element={<ChatDashBoard/>}/>
               </>
             )}
           </Routes>

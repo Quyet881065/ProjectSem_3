@@ -3,6 +3,7 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { assets } from '../assets/assets.'
 import {  BsCart, BsPersonFill} from "react-icons/bs";
+import { BsChatDots } from 'react-icons/bs';
 
 const Sidebar = () => {
   return (
@@ -24,6 +25,10 @@ const Sidebar = () => {
         <NavLink className='flex items-center gap-2 border border-gray-300 border-r-0 px-3 py-2 rounded-1' to='/users'>
           <BsPersonFill className='text-2xl'/>
           <p className='hidden sm:block'>Users</p>
+        </NavLink>
+        <NavLink className='flex items-center gap-2 border border-gray-300 border-r-0 px-3 py-2 rounded-1' to='/chats'>
+          <BsChatDots className='text-2xl'/>
+          <p className='hidden sm:block'>Chats</p>
         </NavLink>
       </div>
     </div>

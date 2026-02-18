@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
 import { getToken } from "../service/localStorageService";
-import { flowersData } from "../data/flowersData";
+import { flowersData } from "../features/product/data/flowersData";
 import { httpClient } from "../configuration/httpClient";
 import { API } from "../configuration/configuration";
 
