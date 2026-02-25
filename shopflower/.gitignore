@@ -5,6 +5,7 @@ target/
 !**/src/test/**/target/
 
 .env
+.env.*
 
 
 ### STS ###
@@ -34,3 +35,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+uploads/
+*.DS_Store
