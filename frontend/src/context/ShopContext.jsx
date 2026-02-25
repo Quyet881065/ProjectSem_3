@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
-import { getToken } from "../service/localStorageService";
+import { getToken, getUserId } from "../service/localStorageService";
 import { flowersData } from "../features/product/data/flowersData";
 import { httpClient } from "../configuration/httpClient";
 import { API } from "../configuration/configuration";
@@ -19,9 +19,9 @@ const ShopContextProvider = props => {
     const navigate = useNavigate();
     const [cartData, setCartData] = useState([]);
     const [cart, setCart] = useState([]);
-    const [cartCount, setCartCount] = useState(0);
-    const [userId, setUserId] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    const userId = getUserId();
 
     // https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${accessToken}
 
@@ -43,6 +43,7 @@ const ShopContextProvider = props => {
     //     console.log("User Details:", data);
     //     const userId = data.results.id;
     // }
+
     useEffect(() => {
         const getMyInfo = async () => {
             if (!token) {
@@ -57,8 +58,6 @@ const ShopContextProvider = props => {
                 const data = response.data?.results;
                 if (data) {
                     setUserProfile(data);
-                    // Kiểm tra cả 2 trường hợp: userid hoặc id (tùy backend trả về)
-                    setUserId(data?.userid);
                     console.log("User Details:", data);
                     console.log("UserID:", data.userid);
                 } else {
@@ -79,7 +78,7 @@ const ShopContextProvider = props => {
             return;
         }
         try {
-            const response = await axios.get(`${backendurl}/cart/${userId}`, {
+            const response = await axios.get(`${backendurl}cart/${userId}`, {
                 headers: {
                     Authorization: `Bearer ${getToken()}`,
                 }
@@ -99,50 +98,40 @@ const ShopContextProvider = props => {
     };
 
     useEffect(() => {
-        getUserCart()
-    }, [])
+        if (userId) {
+            getUserCart();
+        }
+    }, [userId]);
 
-    const getCartCount = () => {
-        return cartData.reduce((count, item) => count + item.quantity, 0);
-    };
-
-    useEffect(() => {
-        setCartCount(getCartCount());
-    }, []);
+  const cartCount = cartData.reduce((count, item) => count + item.quantity, 0);
 
 
     //All flower 
-    const getFlowersData = async () => {
+    const getFlowersByFilter = async (category, search = "", sort = "relevant") => {
         try {
-            const response = await axios.get(backendurl + '/flowers',
-                //     {
-                //     headers: {
-                //         Authorization: `Bearer ${getToken()}`,
-                //     }
-                // }
-            );
+            const response = await axios.get(backendurl + "flowers", {
+                params: {
+                    category: category,
+                    search: search,
+                    sort: sort
+                }
+            });
+
             if (response.data.results) {
                 setFlowers(response.data.results);
             } else {
-                toast.error(response.data.message)
+                toast.error(response.data.message);
             }
+
         } catch (error) {
             console.log(error);
-            toast.error(error.message);
-        } finally {
-            setLoading(false);
         }
-    }
-    useEffect(() => {
-        getFlowersData();
-    }, []);
-
-
+    };
     console.log(flowers);
 
     const clearCart = async () => {
         try {
-            const response = await axios.delete(backendurl + `/cart/clear/${userId}`, {
+            const response = await axios.delete(backendurl + `cart/clear/${userId}`, {
                 headers: { Authorization: `Bearer ${getToken()}` }
             });
             if (response.status === 200) {
@@ -157,17 +146,18 @@ const ShopContextProvider = props => {
     }
 
     //  Add to Cart
-    const addToCart = async (flowerId, quantity) => {
+    const addToCart = async (userId, flowerId, quantity) => {
         const token = getToken();
         if (!token) {
             toast.error('Please log in to add items to your cart.');
             navigate('/login');
             return;
         }
-        if (!userId) {
-            toast.error('User ID not found. Please try again.');
-            return;
-        }
+        // if (!userId) {
+        //     toast.error('User ID not found. Please try again.');
+        //     return;
+        // }
+        console.log("useid : ", userId);
         try {
             const cartItem = {
                 userId: userId,
@@ -176,7 +166,7 @@ const ShopContextProvider = props => {
             };
             console.log("AddToCart:", cartItem);
 
-            const response = await axios.post(`${backendurl}/cart/create`, cartItem, {
+            const response = await axios.post(`${backendurl}cart/create`, cartItem, {
                 headers: {
                     Authorization: `Bearer ${getToken()}`
                 }
@@ -197,7 +187,7 @@ const ShopContextProvider = props => {
     const value = {
         search, setSearch, showSearch, setShowSearch, userId, loading,
         flowers, navigate, token, setToken, backendurl, userProfile, setUserProfile, cart, setCart,
-        clearCart, getCartCount, cartCount, getUserCart, addToCart, setUserId
+        clearCart, cartCount, getUserCart, addToCart, getFlowersByFilter
     }
 
     return (

@@ -13,12 +13,15 @@ import com.web.shopflower.models.OrdersEntity;
 import com.web.shopflower.models.PaymentsEntity;
 import com.web.shopflower.repository.OrderRepository;
 import com.web.shopflower.repository.PaymentRepository;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -30,51 +33,36 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
+
     @Value("${app.media.url-prefix}")
-    private  String urlPrefix;
+    private String urlPrefix;
+
+    private final VnPayConfig config;
+
+//    @Value("${vnpay.tmn-code}")
+//    private String vnpTmnCode;
+//
+//    @Value("${vnpay.secret-key}")
+//    private String secretKey;
+//
+//    @Value("${vnpay.pay-url}")
+//    private String payUrl;
+//
+//    @Value("${vnpay.return-url}")
+//    private String returnUrl;
 
     private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
-   // private final VnPayService vnPayService;
 
-    public ApiResponse<List<OrderPaymentResponse>> getPaymentByOrderId(String orderId){
-        OrdersEntity ordersEntity = orderRepository.findById(orderId).orElseThrow(() ->new RuntimeException("Order not found"));
-//        PaymentsEntity paymentsEntity = ordersEntity.getPaymentsEntities() .stream()
-//                .reduce((first, second) -> second) // lấy phần tử cuối
-//                .orElseThrow(() -> new RuntimeException("Payment not found"));
+    // Debug xem .env có load không
+//    @PostConstruct
+//    public void checkConfig() {
+//        log.info("VNPay TMN Code: {}", vnpTmnCode);
+//        log.info("secret key : {}", secretKey);
+//        log.info("VNPay Return URL: {}", returnUrl);
+//    }
 
-        List<PaymentsEntity> payments = ordersEntity.getPaymentsEntities();
-        if(payments.isEmpty()){
-            throw new RuntimeException("No payment not found for this order");
-        }
-        List<OrderPaymentResponse> responseList = new ArrayList<>();
-
-        for(PaymentsEntity payment : payments){
-            OrderPaymentResponse response = new OrderPaymentResponse();
-            response.setAmount(payment.getAmount());
-            response.setMethod(payment.getMethod());
-            response.setStatusPayment(payment.getStatus());
-            response.setPaidAt(payment.getPaidAt());
-
-            response.setOrderId(ordersEntity.getId());
-            response.setTotalAmount(ordersEntity.getTotalAmount());
-            response.setOrderDate(ordersEntity.getCreatedAt());
-            response.setCustomerName(ordersEntity.getFullName());
-            response.setFlowers(ordersEntity.getOrderItem().stream().map(item -> {
-                FlowerResponse flowerResponse = new FlowerResponse();
-                flowerResponse.setId(item.getFlowerEntity().getId());
-                flowerResponse.setFlowerName(item.getFlowerEntity().getProductName());
-                flowerResponse.setPrice(item.getFlowerEntity().getPrice());
-                flowerResponse.setUrl(urlPrefix + item.getFlowerEntity().getUrl());
-               // flowerResponse.setQuantity(item.getQuantity());
-                return flowerResponse;
-            }).toList());
-            responseList.add(response);
-        }
-        return ApiResponse.<List<OrderPaymentResponse>>builder()
-                .results(responseList)
-                .build();
-    }
+    // ========================= CREATE PAYMENT =========================
 
     public PaymentResponse createPayment(String orderId, PaymentRequest request, HttpServletRequest httpServletRequest){
         // Tim order
@@ -123,15 +111,8 @@ public class PaymentService {
         }
         throw new RuntimeException("Unsupported payment method");
     }
-    private PaymentResponse toPaymentResponse(PaymentsEntity paymentsEntity){
-        PaymentResponse paymentResponse = new PaymentResponse();
-        paymentResponse.setOrderId(paymentsEntity.getOrders().getId());
-        paymentResponse.setAmount(paymentsEntity.getAmount());
-        paymentResponse.setMethod(paymentsEntity.getMethod());
-        paymentResponse.setStatus(paymentsEntity.getStatus());
-        paymentResponse.setPaidAt(paymentsEntity.getPaidAt());
-        return paymentResponse;
-    }
+
+    // ========================= CREATE VNPAY URL =========================
 
     private String createVnPayUrl(OrdersEntity order, String ipAddress) throws UnsupportedEncodingException {
         String vnp_Version = "2.1.0";
@@ -141,7 +122,7 @@ public class PaymentService {
         String bankCode = "NCB";
 
         String vnp_TxnRef = order.getId();
-        String vnp_TmnCode = VnPayConfig.vnp_TmnCode;
+        String vnp_TmnCode = config.getTmnCode();
 
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", vnp_Version);
@@ -154,7 +135,7 @@ public class PaymentService {
         vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang: " + order.getId());
         vnp_Params.put("vnp_OrderType", orderType);
         vnp_Params.put("vnp_Locale", "vn");
-        vnp_Params.put("vnp_ReturnUrl", VnPayConfig.vnp_ReturnUrl);
+        vnp_Params.put("vnp_ReturnUrl", config.getReturnUrl());
         vnp_Params.put("vnp_IpAddr", ipAddress);
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
@@ -186,38 +167,107 @@ public class PaymentService {
             }
         }
 
-        String vnp_SecureHash = VnPayConfig.hmacSHA512(VnPayConfig.secretKey, hashData.toString());
+        String vnp_SecureHash = VnPayConfig.hmacSHA512(config.getSecretKey(), hashData.toString());
         query.append("&vnp_SecureHash=").append(vnp_SecureHash);
-        return VnPayConfig.vnp_PayUrl + "?" + query.toString();
+        return config.getPayUrl() + "?" + query.toString();
     }
 
-    //  Hàm xác nhận thanh toán từ VNPay
+    private String hmacSHA512(String key, String data) throws Exception {
+
+        Mac mac = Mac.getInstance("HmacSHA512");
+        SecretKeySpec secretKeySpec =
+                new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "HmacSHA512");
+
+        mac.init(secretKeySpec);
+
+        byte[] hashBytes = mac.doFinal(data.getBytes(StandardCharsets.UTF_8));
+
+        StringBuilder sb = new StringBuilder();
+        for (byte b : hashBytes) {
+            sb.append(String.format("%02x", b));
+        }
+
+        return sb.toString();
+    }
+
+    // ========================= CONFIRM PAYMENT =========================
+
     public void confirmPayment(String orderId, boolean success) {
-        log.info("🔁 Confirming payment for orderId={} | success={}", orderId, success);
 
-        //  Tìm đơn hàng
         OrdersEntity order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found: " + orderId));
+                .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        // Lấy payment gắn với order
         PaymentsEntity payment = paymentRepository.findByOrders(order)
-                .orElseThrow(() -> new RuntimeException("Payment not found for order: " + orderId));
+                .orElseThrow(() -> new RuntimeException("Payment not found"));
 
-        //  Cập nhật trạng thái thanh toán
         if (success) {
             payment.setStatus(PaymentStatus.COMPLETED);
             payment.setPaidAt(LocalDateTime.now());
             order.setStatus(OrderStatus.PAID);
-            log.info(" Payment success for order {}", orderId);
         } else {
             payment.setStatus(PaymentStatus.FAILED);
             order.setStatus(OrderStatus.PENDING);
-            log.warn(" Payment failed for order {}", orderId);
         }
 
-        //  Lưu lại DB
         paymentRepository.save(payment);
         orderRepository.save(order);
     }
 
+    private PaymentResponse toPaymentResponse(PaymentsEntity payment) {
+
+        PaymentResponse response = new PaymentResponse();
+        response.setOrderId(payment.getOrders().getId());
+        response.setAmount(payment.getAmount());
+        response.setMethod(payment.getMethod());
+        response.setStatus(payment.getStatus());
+        response.setPaidAt(payment.getPaidAt());
+
+        return response;
+    }
+
+    public ApiResponse<List<OrderPaymentResponse>> getPaymentByOrderId(String orderId) {
+
+        OrdersEntity order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        List<PaymentsEntity> payments = order.getPaymentsEntities();
+
+        if (payments == null || payments.isEmpty()) {
+            throw new RuntimeException("No payment found for this order");
+        }
+
+        List<OrderPaymentResponse> responseList = new ArrayList<>();
+
+        for (PaymentsEntity payment : payments) {
+
+            OrderPaymentResponse response = new OrderPaymentResponse();
+
+            response.setOrderId(order.getId());
+            response.setTotalAmount(order.getTotalAmount());
+            response.setOrderDate(order.getCreatedAt());
+            response.setCustomerName(order.getFullName());
+
+            response.setAmount(payment.getAmount());
+            response.setMethod(payment.getMethod());
+            response.setStatusPayment(payment.getStatus());
+            response.setPaidAt(payment.getPaidAt());
+
+            response.setFlowers(
+                    order.getOrderItem().stream().map(item -> {
+                        FlowerResponse flower = new FlowerResponse();
+                        flower.setId(item.getFlowerEntity().getId());
+                        flower.setFlowerName(item.getFlowerEntity().getProductName());
+                        flower.setPrice(item.getFlowerEntity().getPrice());
+                        flower.setUrl(urlPrefix + item.getFlowerEntity().getUrl());
+                        return flower;
+                    }).toList()
+            );
+
+            responseList.add(response);
+        }
+
+        return ApiResponse.<List<OrderPaymentResponse>>builder()
+                .results(responseList)
+                .build();
+    }
 }

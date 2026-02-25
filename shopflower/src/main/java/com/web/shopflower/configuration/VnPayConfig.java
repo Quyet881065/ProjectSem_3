@@ -1,6 +1,7 @@
 package com.web.shopflower.configuration;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,13 +13,23 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
-
+@Configuration
+@Getter
 public class VnPayConfig {
-    public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:5173/payment-return";
-    public static String vnp_TmnCode = "V9TZGVS9";
-    public static String secretKey = "NAWBHJNBBLZXSDESGVSNOKXXMQSFULRU";
-    public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
+    @Value("${vnpay.tmn-code}")
+    private String tmnCode;
+
+    @Value("${vnpay.secret-key}")
+    private String secretKey;
+
+    @Value("${vnpay.pay-url}")
+    private String payUrl;
+
+    @Value("${vnpay.return-url}")
+    private String returnUrl;
+
+    @Value("${vnpay.ipn-url}")
+    private String ipnUrl;
 
     public static String md5(String message) {
         String digest = null;
@@ -57,25 +68,25 @@ public class VnPayConfig {
     }
 
     //Util for VNPAY
-    public static String hashAllFields(Map fields) {
-        List fieldNames = new ArrayList(fields.keySet());
-        Collections.sort(fieldNames);
-        StringBuilder sb = new StringBuilder();
-        Iterator itr = fieldNames.iterator();
-        while (itr.hasNext()) {
-            String fieldName = (String) itr.next();
-            String fieldValue = (String) fields.get(fieldName);
-            if ((fieldValue != null) && (fieldValue.length() > 0)) {
-                sb.append(fieldName);
-                sb.append("=");
-                sb.append(fieldValue);
-            }
-            if (itr.hasNext()) {
-                sb.append("&");
-            }
-        }
-        return hmacSHA512(secretKey,sb.toString());
-    }
+//    public static String hashAllFields(Map fields) {
+//        List fieldNames = new ArrayList(fields.keySet());
+//        Collections.sort(fieldNames);
+//        StringBuilder sb = new StringBuilder();
+//        Iterator itr = fieldNames.iterator();
+//        while (itr.hasNext()) {
+//            String fieldName = (String) itr.next();
+//            String fieldValue = (String) fields.get(fieldName);
+//            if ((fieldValue != null) && (fieldValue.length() > 0)) {
+//                sb.append(fieldName);
+//                sb.append("=");
+//                sb.append(fieldValue);
+//            }
+//            if (itr.hasNext()) {
+//                sb.append("&");
+//            }
+//        }
+//        return hmacSHA512(secretKey,sb.toString());
+//    }
 
     public static String hmacSHA512(final String key, final String data) {
         try {

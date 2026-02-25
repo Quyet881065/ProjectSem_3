@@ -25,6 +25,8 @@ public class FlowerEntity {
     private Double price;
     private String url;
 
+    private String bestSeller;
+
     // Order item
     @OneToMany(mappedBy = "flowerEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     List<OrderItemEntity> orderItem = new ArrayList<>();

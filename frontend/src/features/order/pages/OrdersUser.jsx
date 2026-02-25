@@ -29,7 +29,7 @@ const OrdersUser = () => {
 
     const getDetailsOrder = async (orderId) => {
         try {
-            const response = await axios.get(backendurl + `/orders/${orderId}`, {
+            const response = await axios.get(backendurl + `orders/${orderId}`, {
                 headers: {
                     Authorization: `Bearer ${getToken()}`
                 }
@@ -44,7 +44,7 @@ const OrdersUser = () => {
         }
     }
 
-    const createOrder = async () => {
+    const createPayments = async () => {
         try {
             const data = {
                 method: method,
@@ -52,7 +52,7 @@ const OrdersUser = () => {
             }
             console.log('Payment Data:', data)
             const response = await axios.post(
-                `${backendurl}/payment/${orderData.orderId}`,
+                `${backendurl}payment/${orderData.orderId}`,
                 data,
                 {
                     headers: { Authorization: `Bearer ${getToken()}` }
@@ -155,7 +155,7 @@ const OrdersUser = () => {
                     </div>
                 </div>
             </div>
-            <button  onClick={createOrder}
+            <button  onClick={createPayments}
              className='mt-5 border w-full p-2 rounded-md bg-red-500 text-white text-center'>Payment</button>
         </div>
     )

@@ -20,17 +20,17 @@ const PlaceOrder = () => {
 
     console.log(cart)
     // Get message
-    useEffect(() => {
-        const fetchOccasions = async () => {
-            try {
-                const response = await axios.get(backendurl + '/api/Messages')
-                setOccasions(response.data)
-            } catch (error) {
-                console.error('Error fetching occasions:', error);
-            }
-        }
-        fetchOccasions()
-    }, [backendurl])
+    // useEffect(() => {
+    //     const fetchOccasions = async () => {
+    //         try {
+    //             const response = await axios.get(backendurl + '/api/Messages')
+    //             setOccasions(response.data)
+    //         } catch (error) {
+    //             console.error('Error fetching occasions:', error);
+    //         }
+    //     }
+    //     fetchOccasions()
+    // }, [backendurl])
 
 
     // Submit form
@@ -56,13 +56,13 @@ const PlaceOrder = () => {
         console.log('Order Payload:', orderPayload);
         try {
             // Create order
-            const orderResponse = await axios.post(backendurl + '/orders/create', orderPayload, {
+            const orderResponse = await axios.post(backendurl + 'orders/create', orderPayload, {
                 headers: {
                     Authorization: `Bearer ${getToken()}`
                 }
             });
             console.log("Order response:", orderResponse.data);
-            navigate("/orders/" + orderResponse.data.orderId);
+            navigate("orders/" + orderResponse.data.orderId);
             clearCart();
         } catch (error) {
             console.error('Error creating order:', error);

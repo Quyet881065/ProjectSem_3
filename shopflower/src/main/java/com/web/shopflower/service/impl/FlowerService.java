@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,18 +26,32 @@ import java.util.*;
 public class FlowerService {
     @Value("${app.media.url-prefix}")
     private String urlPrefix;
-    @Autowired
-    private FlowerRepository flowerRepository;
+
+    private final FlowerRepository flowerRepository;
     private final FileStorageService fileStorageService;
 
     public FlowerResponse createFlower(FlowerRequest request )  {
+        String fileName = null;
+
+        System.out.println("BestSeller: " + request.getBestSeller());
+
+        if (request.getImageFile() != null && !request.getImageFile().isEmpty()) {
+            try {
+                var fileInfo = fileStorageService.storeFile(request.getImageFile());
+                fileName = fileInfo.getPath();
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to store file", e);
+            }
+        }
 
         FlowerEntity flowerEntity = new FlowerEntity();
-        flowerEntity.setProductName(request.getProductName());
+        flowerEntity.setProductName(request.getFlowerName());
         flowerEntity.setPrice(request.getPrice());
-        flowerEntity.setUrl(request.getUrl());
+        flowerEntity.setUrl(fileName);
         flowerEntity.setDescription(request.getDescription());
         flowerEntity.setProductsInclude(request.getProductsInclude());
+        flowerEntity.setCategory(request.getCategory());
+        flowerEntity.setBestSeller(request.getBestSeller());
 
         FlowerEntity savedFlower = flowerRepository.save(flowerEntity);
 
@@ -47,38 +62,54 @@ public class FlowerService {
         response.setUrl(savedFlower.getUrl());
         response.setDescription(savedFlower.getDescription());
         response.setFlowerInclude(savedFlower.getProductsInclude());
+        response.setCategory(savedFlower.getCategory());
+        response.setBestSeller(savedFlower.getBestSeller());
 
         return response;
     }
 
-    public ApiResponse<List<FlowerResponse>> getAllFlower(){
-        List<FlowerEntity> flowers = flowerRepository.findAll();
-        List<FlowerResponse> response = new ArrayList<>();
+    public ApiResponse<List<FlowerResponse>> getAllFlower(String category, String search, String sort) {
 
-        for(FlowerEntity flower : flowers){
-            FlowerResponse flowerResponse = new FlowerResponse();
-            // Nếu bạn lưu tên file trong DB, tạo url đầy đủ
-            String fileName = flower.getUrl(); // giả sử DB lưu fileName, ví dụ "uuid_hoahong.webp"
-            if(fileName != null && !fileName.isEmpty()){
-                String fullUrl = urlPrefix + fileName;
-                flowerResponse.setUrl(fullUrl);
-                log.info("full url : {}", fullUrl);
-            } else {
-                flowerResponse.setUrl(null);
-            }
-            flowerResponse.setId(flower.getId());
-            flowerResponse.setPrice(flower.getPrice());
-            flowerResponse.setFlowerName(flower.getProductName());
-            flowerResponse.setDescription(flower.getDescription());
-            flowerResponse.setFlowerInclude(flower.getProductsInclude());
-            response.add(flowerResponse);
+        if(category == null) category = "";
+        if(search == null) search = "";
+
+        Sort sorting = Sort.unsorted();
+
+        if("low-high".equals(sort)){
+            sorting = Sort.by("price").ascending();
+        } else if("high-low".equals(sort)){
+            sorting = Sort.by("price").descending();
         }
-       return ApiResponse.<List<FlowerResponse>>builder()
-               .statusCode(200)
-               .message("success")
-                .results(response)
+
+        List<FlowerEntity> flowers = flowerRepository
+                .findByCategoryContainingIgnoreCaseAndProductNameContainingIgnoreCase(
+                        category,
+                        search,
+                        sorting
+                );
+
+        List<FlowerResponse> responses = new ArrayList<>();
+
+        for (FlowerEntity flower : flowers) {
+
+            FlowerResponse response = new FlowerResponse();
+            response.setId(flower.getId());
+            response.setFlowerName(flower.getProductName());
+            response.setPrice(flower.getPrice());
+            response.setCategory(flower.getCategory());
+            response.setUrl(flower.getUrl());
+            response.setDescription(flower.getDescription());
+            response.setBestSeller(flower.getBestSeller());
+            response.setFlowerInclude(flower.getProductsInclude());
+            responses.add(response);
+        }
+
+        return ApiResponse.<List<FlowerResponse>>builder()
+                .results(responses)
+                .message("success")
                 .build();
     }
+
 
     public FlowerResponse getFlower(String id){
         FlowerEntity flowerEntity = flowerRepository.findById(id)
@@ -98,6 +129,7 @@ public class FlowerService {
         flowerResponse.setPrice(flowerEntity.getPrice());
         flowerResponse.setDescription(flowerEntity.getDescription());
         flowerResponse.setFlowerInclude(flowerEntity.getProductsInclude());
+        flowerResponse.setCategory(flowerEntity.getCategory());
         return flowerResponse;
     }
 

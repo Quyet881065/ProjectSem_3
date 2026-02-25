@@ -2,6 +2,7 @@ package com.web.shopflower.configuration;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -22,6 +23,12 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+    @Value("${frontend_user.url}")
+    private String frontendUser;
+    @Value("${frontend_admin.url}")
+    private String frontendAdmin;
+
     private final String[] PUBLIC_ENDPOINTS = {
             "/flowers/**" , "/flowers"
     };
@@ -48,7 +55,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5000")); // cho frontend React
+        configuration.setAllowedOrigins(List.of(frontendUser, frontendAdmin)); // cho frontend React
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true); // nếu có gửi cookie/token

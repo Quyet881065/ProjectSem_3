@@ -4,13 +4,13 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { ShopContext } from '../context/ShopContext';
 const Add = () => {
-  const {backendurl} = useContext(ShopContext)
+  const { backendurl } = useContext(ShopContext)
   const [flowerData, setFlowerData] = useState({
     name: '',
     description: '',
     price: '',
     category: '',
-    productsInclude : '',
+    productsInclude: '',
     bestseller: false,
     image: null
   });
@@ -31,28 +31,30 @@ const Add = () => {
       fromData.append('price', flowerData.price);
       fromData.append('description', flowerData.description);
       fromData.append('category', flowerData.category);
-      fromData.append('bestseller', flowerData.bestseller);
       fromData.append('imageFile', flowerData.image);
       fromData.append('productsInclude', flowerData.productsInclude);
+      fromData.append(
+        "bestSeller",flowerData.bestseller ? "true" : "false");
 
-      const response = await axios.post(backendurl + '/api/Flowers', fromData)
-      if (response.data.success) {
+      const response = await axios.post(backendurl + '/flowers/create', fromData)
+      toast.success("Flower created successfully")
+      if (response.data) {
         setFlowerData({
           name: '',
           description: '',
           price: '',
           category: '',
-          productsInclude :'',
+          productsInclude: '',
           bestseller: false,
           image: null,
         })
         toast.success(response.data.message);
-      }else{
+      } else {
         toast.error(response.data.message)
       }
     } catch (error) {
-       console.log(error)
-       toast.error(error.message)
+      console.log(error)
+      toast.error(error.message)
     }
   }
   console.log(flowerData)
@@ -68,8 +70,8 @@ const Add = () => {
       </div>
       <div>
         <p>Bouquet Include</p>
-        <input type='text' className='w-full max-w-[600px] px-3 py-2 border' 
-         onChange={handleChange} name='productsInclude' value={flowerData.productsInclude} />
+        <input type='text' className='w-full max-w-[600px] px-3 py-2 border'
+          onChange={handleChange} name='productsInclude' value={flowerData.productsInclude} />
       </div>
       <div>
         <p>Description</p>
@@ -105,7 +107,7 @@ const Add = () => {
         <label htmlFor='image' className='flex max-w-[100px]'>
           <img className='w-20' src={!flowerData.image ? assets.upload_area : URL.createObjectURL(flowerData.image)} alt='' />
           <input onChange={handleChange} type='file' name='image' hidden id='image' />
-        </label> 
+        </label>
       </div>
       <button type='submit' className='w-27 bg-blue-500 text-white py-3 rounded-lg cursor-pointer'>ADD</button>
     </form>

@@ -6,12 +6,11 @@ import axios from 'axios'
 import { ShopContext } from '../../../context/ShopContext'
 import Title from '../../../components/layout/Title'
 import RelatedFlowers from '../component/RelatedFlowers'
-import { getToken } from '../../../service/localStorageService'
+import { getToken, getUserId } from '../../../service/localStorageService'
 
 const FlowerDetail = () => {
   const {backendurl} = useContext(ShopContext)
   const { flowerParamId } = useParams();
-  const currency = '$';
   const [flowerData, setFlowerData] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const { addToCart, getCartCount, userId } = useContext(ShopContext)
@@ -20,7 +19,7 @@ const FlowerDetail = () => {
     // Find the flower based on the URL parameter
     const getFlowerById = async () => {
       try {
-        const response = await axios.get(`${backendurl}/flowers/${flowerParamId}`, {
+        const response = await axios.get(`${backendurl}flowers/${flowerParamId}`, {
           headers: {Authorization:`Bearer ${getToken()}`}
         });
         if (response.data) {
@@ -74,7 +73,7 @@ const FlowerDetail = () => {
                 onChange={handleQuantityChange}
               />
             </div>
-            <button onClick={() => addToCart(flowerData.id, quantity)} className='bg-blue-500 text-white px-8 py-3 text-base font-medium active:bg-gray-700 mt-5 max-w-60 rounded-md'>
+            <button onClick={() => addToCart(getUserId() ,flowerData.id, quantity)} className='bg-blue-500 text-white px-8 py-3 text-base font-medium active:bg-gray-700 mt-5 max-w-60 rounded-md'>
               ADD TO CART
             </button>
           </div>
@@ -105,7 +104,7 @@ const FlowerDetail = () => {
         </div>
       </div>
       <div>
-        <RelatedFlowers/>
+       <RelatedFlowers category={flowerData.category} />
       </div>
     </div>
   )

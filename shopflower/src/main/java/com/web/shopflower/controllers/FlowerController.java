@@ -28,9 +28,13 @@ public class FlowerController {
 
 
     @GetMapping("")
-    ApiResponse<List<FlowerResponse>> getAllFlowers(){
-        return flowerService.getAllFlower();
+    ApiResponse<List<FlowerResponse>> getAllFlowers(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false, defaultValue = "relevant") String sort){
+        return flowerService.getAllFlower(category, search, sort);
     }
+
 
     @GetMapping("/{id}")
     FlowerResponse getFlower(@PathVariable String id){
@@ -53,11 +57,11 @@ public class FlowerController {
                 .body(fileDataResponse.getResource());
     }
 
-    //  API tạo flower (chỉ nhận JSON)
-    @PostMapping("/create")
-    public FlowerResponse createFlower(@RequestBody FlowerRequest request) {
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public FlowerResponse createFlower(@ModelAttribute FlowerRequest request) throws IOException {
         return flowerService.createFlower(request);
     }
+
     @GetMapping("/total")
     ApiResponse<Long> getTotalFlowers(){
         long total = flowerService.getTotalFlowers();

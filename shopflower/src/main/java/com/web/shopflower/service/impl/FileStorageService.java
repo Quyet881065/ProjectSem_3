@@ -19,6 +19,9 @@ import java.util.UUID;
 public class FileStorageService {
     @Value("${app.media.url-prefix}")
     private String urlPrefix;
+
+    @Value("${app.media.max-size:5242880}") // default 5MB
+    private long maxFileSize;
     // Luôn lưu ở thư mục uploads/flowers trong root của project
     private final Path uploadDir = Paths.get(System.getProperty("user.dir"), "uploads", "flowers");
 

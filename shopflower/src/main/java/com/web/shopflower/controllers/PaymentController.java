@@ -24,6 +24,7 @@ import java.util.*;
 @Slf4j
 public class PaymentController {
     private final PaymentService paymentService;
+    private final VnPayConfig config;
 
     @GetMapping("/{orderId}")
     ApiResponse<List<OrderPaymentResponse>> getPaymentByOrderId(@PathVariable String orderId){
@@ -36,7 +37,7 @@ public class PaymentController {
             @RequestBody PaymentRequest paymentRequest,
             HttpServletRequest request) {
 
-        log.info("💳 Creating payment for orderId: {}, method: {}", orderId, paymentRequest.getMethod());
+        log.info(" Creating payment for orderId: {}, method: {}", orderId, paymentRequest.getMethod());
         PaymentResponse response = paymentService.createPayment(orderId, paymentRequest, request);
 
         return ApiResponse.<PaymentResponse>builder()
@@ -86,7 +87,7 @@ public class PaymentController {
         String vnp_TxnRef = VnPayConfig.getRandomNumber(8);
         String vnp_IpAddr = "127.0.0.1";
 
-        String vnp_TmnCode = VnPayConfig.vnp_TmnCode;
+        String vnp_TmnCode = config.getTmnCode();
 
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", vnp_Version);
@@ -101,7 +102,7 @@ public class PaymentController {
         vnp_Params.put("vnp_OrderType", orderType);
 
         vnp_Params.put("vnp_Locale", "vn");
-        vnp_Params.put("vnp_ReturnUrl", VnPayConfig.vnp_ReturnUrl);
+        vnp_Params.put("vnp_ReturnUrl", config.getReturnUrl());
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
@@ -137,9 +138,9 @@ public class PaymentController {
             }
         }
         String queryUrl = query.toString();
-        String vnp_SecureHash = VnPayConfig.hmacSHA512(VnPayConfig.secretKey, hashData.toString());
+        String vnp_SecureHash = VnPayConfig.hmacSHA512(config.getSecretKey(), hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
-        String paymentUrl = VnPayConfig.vnp_PayUrl + "?" + queryUrl;
+        String paymentUrl = config.getPayUrl() + "?" + queryUrl;
         log.info("payment url : {}", paymentUrl);
         return paymentUrl;
     }

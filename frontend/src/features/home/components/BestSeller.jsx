@@ -10,9 +10,12 @@ const BestSeller = () => {
     const [bestSellers, setBestSeller] = useState([]);
 
     useEffect(()=>{
-       const bestSeller = flowers.filter(item => item.bestseller);
+       const bestSeller = flowers.filter(item => item.bestSeller == "true");
        setBestSeller(bestSeller.slice(0,15));
     },[flowers])
+
+    console.log("All Flowers:", flowers);
+    console.log("Best Sellers:", bestSellers);
     
     return (
     //     <motion.div
@@ -26,9 +29,8 @@ const BestSeller = () => {
                 <Title text1={'BEST'} text2={'SELLERS'} />
             </div>
             <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5'>
-               {bestSellers.map((item, index)=>(
-                <FlowerItem key={index} id={item.flowerId} name={item.flowerName} price={item.price} image={item.image}/>
-               ))}
+               {bestSellers.map((item, index)=>(<FlowerItem key={index} id={item.id} name={item.flowerName} price={item.price} imageUrl={item.url}/>)
+               )}
             </div>
         </div>
        // </motion.div>

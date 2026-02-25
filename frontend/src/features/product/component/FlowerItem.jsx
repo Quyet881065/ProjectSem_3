@@ -6,23 +6,35 @@ import axios from 'axios'
 const FlowerItem = ({ id, imageUrl, name, price }) => {
   const [imgSrc, setImgSrc] = useState(null);
 
-  useEffect(() => {
-    const loadImage = async () => {
-      try {
-        const token = getToken();
-        const response = await axios.get(imageUrl, {
-         // headers: { Authorization: `Bearer ${token}` },
+ useEffect(() => {
+  const loadImage = async () => {
+    try {
+      const token = getToken();
+
+      const response = await axios.get(
+        `http://localhost:8080/flowers/media/download/${imageUrl}`,
+        {
+          // headers: { Authorization: `Bearer ${token}` },
           responseType: "blob",
-        });
-        setImgSrc(URL.createObjectURL(response.data));
-      } catch (err) {
-        console.error("Error fetching image:", err);
-      }
-    };
+        }
+      );
+
+      const imageObjectUrl = URL.createObjectURL(response.data);
+      setImgSrc(imageObjectUrl);
+
+    } catch (err) {
+      console.error("Error fetching image:", err);
+    }
+  };
+
+  if (imageUrl) {
     loadImage();
-  }, []);
+  }
+
+}, [imageUrl]);
+
   return (
-    <div className='border pt-2'>
+    <div className='border p-5 rounded-sm'>
       <Link className='text-gray-700 cursor-pointer' to={`/flower/${id}`}>
         <div className='flex flex-col items-center'>
           <div className='overflow-hidden'>

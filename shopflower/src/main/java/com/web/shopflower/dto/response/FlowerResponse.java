@@ -10,4 +10,6 @@ public class FlowerResponse {
     private String description;
     private Double price;
     private String url;
+    private String category;
+    private String bestSeller;
 }
